@@ -15,13 +15,14 @@
  */
 
 variable "project_id" {
-  description = "The project ID to deploy to"
-}
-
-variable "credentials_path" {
-  description = "The path to a Google Cloud Service Account credentials file"
+  description = "The project_id to deploy the example instance into.  (e.g. \"simple-sample-project-1234\")"
 }
 
 variable "region" {
   description = "The region to deploy to"
+}
+
+variable "url" {
+  description = "The url to fetch in the startup script.  This URL is passed via instance metadata to the startup script.  (e.g. ifconfig.co/city)"
+  default     = "http://ifconfig.co/json"
 }

@@ -45,3 +45,5 @@ crash.log
 **/terraform.tfvars
 
 credentials.json
+.idea
+.envrc

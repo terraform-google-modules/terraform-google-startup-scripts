@@ -14,3 +14,7 @@
  * limitations under the License.
  */
 
+output "content" {
+  description = "startup-script-stdlib.sh content as a string value."
+  value       = "${file("${path.module}/files/startup-script-stdlib.sh")}"
+}
