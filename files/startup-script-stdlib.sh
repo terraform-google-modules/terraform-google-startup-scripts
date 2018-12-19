@@ -85,7 +85,8 @@ stdlib::init() {
 # fired on exit.  A local file path or http URL are both supported.
 stdlib::run_startup_script_custom() {
   local script_file key
-  script_file="$(mktemp)"
+  # shellcheck disable=SC2119
+  script_file="$(stdlib::mktemp)"
   key="instance/attributes/startup-script-custom"
 
   if ! stdlib::metadata_get -k "${key}" -o "${script_file}"; then
@@ -214,11 +215,17 @@ stdlib::run_or_die() {
   fi
 }
 
+# Intended to take advantage of automatic cleanup of startup script library
+# temporary files without exporting a modified TMPDIR to child processes, which
+# would cause the children to have their TMPDIR deleted out from under them.
+# shellcheck disable=SC2120
+stdlib::mktemp() {
+  TMPDIR="${DELETE_AT_EXIT:-${TMPDIR}}" mktemp "$@"
+}
+
 stdlib::main() {
   DELETE_AT_EXIT="$(mktemp -d)"
   readonly DELETE_AT_EXIT
-  # Set TMPDIR for mktemp() to clean up nicely.
-  declare -xr TMPDIR="$DELETE_AT_EXIT"
 
   # Initialize state required by other functions, e.g. debug()
   stdlib::init
