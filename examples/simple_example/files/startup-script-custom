@@ -1,0 +1,5 @@
+#! /bin/bash
+URL=${URL:-"http://ifconfig.co/json"}
+stdlib::info "Fetching ${URL}"
+stdlib::cmd curl --silent "${URL}"
+echo
