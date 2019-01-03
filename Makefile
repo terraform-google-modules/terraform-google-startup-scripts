@@ -18,11 +18,13 @@ SHELL := /usr/bin/env bash
 # Docker build config variables
 # Use commit ID's because BATS upstream does not tag releases correctly.
 BUILD_BATS_VERSION ?= 03608115df2071fff4eaaff1605768c275e5f81f
-BUILD_BATS_ASSERT_VERSION ?= 9f88b4207da750093baabc4e3f41bf68f0dd3630
+BUILD_BATS_ASSERT_VERSION ?= 8200039faf9790c05d9865490c97a0e101b9c80f
+BUILD_BATS_ASSERT_URI ?= https://github.com/jasonkarns/bats-assert-1.git
 BUILD_BATS_MOCK_VERSION ?= 2f9811faf43593ad7b59a0f245d8807b776e5072
 BUILD_BATS_SUPPORT_VERSION ?= 004e707638eedd62e0481e8cdc9223ad471f12ee
 DOCKER_IMAGE_BATS := cftk/bats
-DOCKER_TAG_BATS ?= 0.4.0
+# DOCKER_TAG_BATS is the image semver and has no correlation to bats versions
+DOCKER_TAG_BATS ?= 0.5.0
 
 # All is the first target in the file so it will get picked up when you just run 'make' on its own
 all: check_shell check_python check_golang check_terraform check_docker check_base_files test_check_headers check_headers check_trailing_whitespace generate_docs
@@ -87,6 +89,7 @@ docker_build_bats:
 	docker build -f build/docker/bats/Dockerfile \
 		--build-arg BUILD_BATS_VERSION=${BUILD_BATS_VERSION} \
 		--build-arg BUILD_BATS_ASSERT_VERSION=${BUILD_BATS_ASSERT_VERSION} \
+		--build-arg BUILD_BATS_ASSERT_URI=${BUILD_BATS_ASSERT_URI} \
 		--build-arg BUILD_BATS_MOCK_VERSION=${BUILD_BATS_MOCK_VERSION} \
 		--build-arg BUILD_BATS_SUPPORT_VERSION=${BUILD_BATS_SUPPORT_VERSION} \
 		-t ${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} .
