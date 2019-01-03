@@ -15,6 +15,15 @@
 # Make will use bash instead of sh
 SHELL := /usr/bin/env bash
 
+# Docker build config variables
+# Use commit ID's because BATS upstream does not tag releases correctly.
+BUILD_BATS_VERSION ?= 03608115df2071fff4eaaff1605768c275e5f81f
+BUILD_BATS_ASSERT_VERSION ?= 9f88b4207da750093baabc4e3f41bf68f0dd3630
+BUILD_BATS_MOCK_VERSION ?= 2f9811faf43593ad7b59a0f245d8807b776e5072
+BUILD_BATS_SUPPORT_VERSION ?= 004e707638eedd62e0481e8cdc9223ad471f12ee
+DOCKER_IMAGE_BATS := cftk/bats
+DOCKER_TAG_BATS ?= 0.4.0
+
 # All is the first target in the file so it will get picked up when you just run 'make' on its own
 all: check_shell check_python check_golang check_terraform check_docker check_base_files test_check_headers check_headers check_trailing_whitespace generate_docs
 
@@ -63,18 +72,6 @@ check_headers:
 	@echo "Checking file headers"
 	@python test/verify_boilerplate.py
 
-# Integration tests
-.PHONY: test_integration
-test_integration:
-	source ${TEST_CONFIG_FILE_LOCATION}
-	bundle install
-	bundle exec kitchen create
-	bundle exec kitchen converge
-	bundle exec kitchen converge
-	@echo "Waiting ${GCE_INSTANCE_INIT_WAIT_TIME} seconds for load balancer to come online..."
-	bundle exec kitchen verify
-	bundle exec kitchen destroy
-
 .PHONY: generate_docs
 generate_docs:
 	@source test/make.sh && generate_docs
@@ -85,62 +82,27 @@ version:
 	@source helpers/version-repo.sh
 
 # Build Docker
-.PHONY: docker_build_terraform
-docker_build_terraform:
-	docker build -f build/docker/terraform/Dockerfile \
-		--build-arg BUILD_TERRAFORM_VERSION=${BUILD_TERRAFORM_VERSION} \
-		--build-arg BUILD_CLOUD_SDK_VERSION=${BUILD_CLOUD_SDK_VERSION} \
-		--build-arg BUILD_PROVIDER_GOOGLE_VERSION=${BUILD_PROVIDER_GOOGLE_VERSION} \
-		--build-arg BUILD_PROVIDER_GSUITE_VERSION=${BUILD_PROVIDER_GSUITE_VERSION} \
-		-t ${DOCKER_IMAGE_TERRAFORM}:${DOCKER_TAG_TERRAFORM} .
+.PHONY: docker_build_bats
+docker_build_bats:
+	docker build -f build/docker/bats/Dockerfile \
+		--build-arg BUILD_BATS_VERSION=${BUILD_BATS_VERSION} \
+		--build-arg BUILD_BATS_ASSERT_VERSION=${BUILD_BATS_ASSERT_VERSION} \
+		--build-arg BUILD_BATS_MOCK_VERSION=${BUILD_BATS_MOCK_VERSION} \
+		--build-arg BUILD_BATS_SUPPORT_VERSION=${BUILD_BATS_SUPPORT_VERSION} \
+		-t ${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} .
 
-.PHONY: docker_build_kitchen_terraform
-docker_build_kitchen_terraform:
-	docker build -f build/docker/kitchen_terraform/Dockerfile \
-		--build-arg BUILD_TERRAFORM_IMAGE="${DOCKER_IMAGE_TERRAFORM}:${DOCKER_TAG_TERRAFORM}" \
-		--build-arg BUILD_RUBY_VERSION="${BUILD_RUBY_VERSION}" \
-		-t ${DOCKER_IMAGE_KITCHEN_TERRAFORM}:${DOCKER_TAG_KITCHEN_TERRAFORM} .
-
-# Run docker
-.PHONY: docker_run
-docker_run:
+# Run docker bats spec tests
+.PHONY: docker_bats
+docker_bats:
 	docker run --rm -it \
 		-v $(CURDIR):/cftk/workdir \
-		${DOCKER_IMAGE_KITCHEN_TERRAFORM}:${DOCKER_TAG_KITCHEN_TERRAFORM} \
+		${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} \
+		/bin/bash -c "bats test/spec/*.bats"
+
+# Run docker bats shell
+.PHONY: docker_bats_shell
+docker_bats_shell:
+	docker run --rm -it \
+		-v $(CURDIR):/cftk/workdir \
+		${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} \
 		/bin/bash
-
-.PHONY: docker_create
-docker_create: docker_build_terraform docker_build_kitchen_terraform
-	docker run --rm -it \
-		-v $(CURDIR):/cftk/workdir \
-		${DOCKER_IMAGE_KITCHEN_TERRAFORM}:${DOCKER_TAG_KITCHEN_TERRAFORM} \
-		/bin/bash -c "source ${TEST_CONFIG_FILE_LOCATION} && kitchen create"
-
-.PHONY: docker_converge
-docker_converge:
-	docker run --rm -it \
-		-v $(CURDIR):/cftk/workdir \
-		${DOCKER_IMAGE_KITCHEN_TERRAFORM}:${DOCKER_TAG_KITCHEN_TERRAFORM} \
-		/bin/bash -c "source ${TEST_CONFIG_FILE_LOCATION} && kitchen converge && kitchen converge"
-
-.PHONY: docker_verify
-docker_verify:
-	docker run --rm -it \
-		-v $(CURDIR):/cftk/workdir \
-		${DOCKER_IMAGE_KITCHEN_TERRAFORM}:${DOCKER_TAG_KITCHEN_TERRAFORM} \
-		/bin/bash -c "source ${TEST_CONFIG_FILE_LOCATION} && kitchen verify"
-
-.PHONY: docker_destroy
-docker_destroy:
-	docker run --rm -it \
-		-v $(CURDIR):/cftk/workdir \
-		${DOCKER_IMAGE_KITCHEN_TERRAFORM}:${DOCKER_TAG_KITCHEN_TERRAFORM} \
-		/bin/bash -c "source ${TEST_CONFIG_FILE_LOCATION} && kitchen destroy"
-
-.PHONY: test_integration_docker
-test_integration_docker: docker_create docker_converge docker_verify docker_destroy
-	@echo "Running test-kitchen tests in docker"
-
-.PHONY: prepare_test_variables
-prepare_test_variables:
-	@source test/make.sh && prepare_test_variables
