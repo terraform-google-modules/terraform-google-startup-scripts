@@ -84,6 +84,7 @@ stdlib::init() {
 # fired on exit.  A local file path or http URL are both supported.
 stdlib::run_startup_script_custom() {
   local script_file key
+  local exit_code
   # shellcheck disable=SC2119
   script_file="$(stdlib::mktemp)"
   key="instance/attributes/startup-script-custom"
@@ -97,12 +98,9 @@ stdlib::run_startup_script_custom() {
   stdlib::debug "=== BEGIN ${key} ==="
   # shellcheck source=/dev/null
   source "${script_file}"
-  stdlib::debug "=== END ${key} ==="
-}
-
-stdlib::run_startup_script_custom_usage() {
-  stdlib::error 'Usage: run_startup_script_custom -c <key>'
-  stdlib::info 'Sources the base script at computeMetadata/v1/instance/attributes/<key>'
+  exit_code=$?
+  stdlib::debug "=== END ${key} exit_code=${exit_code} ==="
+  return $exit_code
 }
 
 # Initialize global variables.

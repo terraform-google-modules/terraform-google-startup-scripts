@@ -1,0 +1,4 @@
+#! /bin/bash
+
+stdlib::error "Something went wrong"
+exit 100
