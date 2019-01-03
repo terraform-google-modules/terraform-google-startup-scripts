@@ -155,9 +155,12 @@ stdlib::metadata_get() {
     k) key="${OPTARG}" ;;
     o) outfile="${OPTARG}" ;;
     :)
+      stdlib::error "Invalid option: -${OPTARG} requires an argument"
+      stdlib::metadata_get_usage
       return "${E_MISSING_MANDATORY_ARG}"
       ;;
     *)
+      stdlib::error "Unknown option: -${opt}"
       stdlib::metadata_get_usage
       return "${E_UNKNOWN_ARG}"
       ;;
@@ -190,8 +193,8 @@ stdlib::metadata_get() {
 }
 
 stdlib::metadata_get_usage() {
-  stdlib::error 'Usage: metadata_get -k <key>'
-  stdlib::info 'For example: metadata_get -k instance/attributes/startup-config'
+  stdlib::info 'Usage: stdlib::metadata_get -k <key>'
+  stdlib::info 'For example: stdlib::metadata_get -k instance/attributes/startup-config'
 }
 
 # Run a command logging the entry and exit.  Intended for system level commands
