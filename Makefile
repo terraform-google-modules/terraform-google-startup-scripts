@@ -99,6 +99,14 @@ docker_bats:
 		${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} \
 		/bin/bash -c "bats test/spec/*.bats"
 
+# Run docker bats spec tests in parallel (~30% faster)
+.PHONY: docker_bats_parallel
+docker_bats_parallel:
+	docker run --rm -it \
+		-v $(CURDIR):/cftk/workdir \
+		${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} \
+		/bin/bash -c "time find test/spec/ -name '*.bats' -print0 | xargs -0 -P4 --no-run-if-empty -n1 bats"
+
 # Run docker bats shell
 .PHONY: docker_bats_shell
 docker_bats_shell:
