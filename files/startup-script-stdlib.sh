@@ -70,14 +70,13 @@ stdlib::error() {
 # minimum amount of work required for all functions to operate cleanly.
 stdlib::init() {
   if [[ ${STARTUP_SCRIPT_STDLIB_INITIALIZED} -gt 0 ]]; then
-    stdlib::info 'init_startup_stdlib()'" has been initialized" \
-      "${STARTUP_SCRIPT_STDLIB_INITIALIZED} times already." \
-      "Suggest initializing only once."
+    stdlib::info 'stdlib::init()'" already initialized, no action taken."
+    return 0
   fi
   ((STARTUP_SCRIPT_STDLIB_INITIALIZED++)) || true
   stdlib::init_global_vars
   stdlib::init_directories
-  stdlib::debug "init_startup_stdlib(): startup-script-stdlib.sh initialized and ready"
+  stdlib::debug "stdlib::init(): startup-script-stdlib.sh initialized and ready"
 }
 
 # Transfer control to startup-startup-script-custom.  The script is sourced to
