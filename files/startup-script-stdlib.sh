@@ -212,7 +212,7 @@ stdlib::cmd() {
 # Run a command successfully or exit the program with an error.
 stdlib::run_or_die() {
   if ! stdlib::cmd "$@"; then
-    stdlib::error "run_or_die(): exiting with exit code ${E_RUN_OR_DIE}."
+    stdlib::error "stdlib::run_or_die(): exiting with exit code ${E_RUN_OR_DIE}."
     exit "${E_RUN_OR_DIE}"
   fi
 }
