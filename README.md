@@ -83,6 +83,43 @@ non-zero length value.  Logs are sent to syslog and standard error by default.
 | SYSLOG_ERROR_PRIORITY | syslog.error     | `logger -p <value>`           |
 | VARDIR                | /var/lib/startup | Durable alternative to TMPDIR |
 
+# Automated Tests
+
+Automated tests are run inside of a docker image.  The initial tests are modeled
+as specification tests validating expected behavior.  [bats][bats] is the test
+framework run inside the container.
+
+## Spec Tests
+
+### Build the bats container image
+
+Build the image used to validate specification tests.  This command builds an
+image with bats installed, suitable for running the tests.
+
+```sh
+make docker_build_bats
+```
+
+### Validate Behavior Specifications
+
+Validate the expected behavior using the image containing the bats tools.  This
+command runs the container and executes bats against each of the test suite
+files in `test/spec/`
+
+```sh
+make docker_bats
+```
+
+Example output:
+
+```txt
+1..4
+ok 1 STARTUP_SCRIPT_STDLIB_INITIALIZED is initialized to 0
+ok 2 E_RUN_OR_DIE error code is 5
+ok 3 E_MISSING_MANDATORY_ARG error code is 9
+ok 4 E_UNKNOWN_ARG error code is 10
+```
+
 [^]: (autogen_docs_start)
 
 
@@ -95,3 +132,4 @@ non-zero length value.  Logs are sent to syslog and standard error by default.
 [^]: (autogen_docs_end)
 
 [metadata_startup_script]: https://www.terraform.io/docs/providers/google/r/compute_instance.html#metadata_startup_script
+[bats]: https://github.com/sstephenson/bats
