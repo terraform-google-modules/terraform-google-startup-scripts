@@ -70,14 +70,13 @@ stdlib::error() {
 # minimum amount of work required for all functions to operate cleanly.
 stdlib::init() {
   if [[ ${STARTUP_SCRIPT_STDLIB_INITIALIZED} -gt 0 ]]; then
-    stdlib::info 'init_startup_stdlib()'" has been initialized" \
-      "${STARTUP_SCRIPT_STDLIB_INITIALIZED} times already." \
-      "Suggest initializing only once."
+    stdlib::info 'stdlib::init()'" already initialized, no action taken."
+    return 0
   fi
   ((STARTUP_SCRIPT_STDLIB_INITIALIZED++)) || true
   stdlib::init_global_vars
   stdlib::init_directories
-  stdlib::debug "init_startup_stdlib(): startup-script-stdlib.sh initialized and ready"
+  stdlib::debug "stdlib::init(): startup-script-stdlib.sh initialized and ready"
 }
 
 # Transfer control to startup-startup-script-custom.  The script is sourced to
@@ -85,6 +84,7 @@ stdlib::init() {
 # fired on exit.  A local file path or http URL are both supported.
 stdlib::run_startup_script_custom() {
   local script_file key
+  local exit_code
   # shellcheck disable=SC2119
   script_file="$(stdlib::mktemp)"
   key="instance/attributes/startup-script-custom"
@@ -98,12 +98,9 @@ stdlib::run_startup_script_custom() {
   stdlib::debug "=== BEGIN ${key} ==="
   # shellcheck source=/dev/null
   source "${script_file}"
-  stdlib::debug "=== END ${key} ==="
-}
-
-stdlib::run_startup_script_custom_usage() {
-  stdlib::error 'Usage: run_startup_script_custom -c <key>'
-  stdlib::info 'Sources the base script at computeMetadata/v1/instance/attributes/<key>'
+  exit_code=$?
+  stdlib::debug "=== END ${key} exit_code=${exit_code} ==="
+  return $exit_code
 }
 
 # Initialize global variables.
@@ -156,9 +153,12 @@ stdlib::metadata_get() {
     k) key="${OPTARG}" ;;
     o) outfile="${OPTARG}" ;;
     :)
+      stdlib::error "Invalid option: -${OPTARG} requires an argument"
+      stdlib::metadata_get_usage
       return "${E_MISSING_MANDATORY_ARG}"
       ;;
     *)
+      stdlib::error "Unknown option: -${opt}"
       stdlib::metadata_get_usage
       return "${E_UNKNOWN_ARG}"
       ;;
@@ -191,8 +191,8 @@ stdlib::metadata_get() {
 }
 
 stdlib::metadata_get_usage() {
-  stdlib::error 'Usage: metadata_get -k <key>'
-  stdlib::info 'For example: metadata_get -k instance/attributes/startup-config'
+  stdlib::info 'Usage: stdlib::metadata_get -k <key>'
+  stdlib::info 'For example: stdlib::metadata_get -k instance/attributes/startup-config'
 }
 
 # Run a command logging the entry and exit.  Intended for system level commands
@@ -210,7 +210,7 @@ stdlib::cmd() {
 # Run a command successfully or exit the program with an error.
 stdlib::run_or_die() {
   if ! stdlib::cmd "$@"; then
-    stdlib::error "run_or_die(): exiting with exit code ${E_RUN_OR_DIE}."
+    stdlib::error "stdlib::run_or_die(): exiting with exit code ${E_RUN_OR_DIE}."
     exit "${E_RUN_OR_DIE}"
   fi
 }

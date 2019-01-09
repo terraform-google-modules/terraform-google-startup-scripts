@@ -115,10 +115,15 @@ if ! [[ -e /proc ]]; then
   export VARDIR
 fi
 
-# Load and initialize the function library before each test.
-setup() {
+# Use in setup(), separated out so setup() may be overridden.
+source_stdlib() {
   # shellcheck source=/dev/null
   source "${BATS_TEST_DIRNAME%/}/../../files/startup-script-stdlib.sh"
+}
+
+# Load and initialize the function library before each test.
+setup() {
+  source_stdlib
 }
 
 # Clear out the logging command list after every test.
