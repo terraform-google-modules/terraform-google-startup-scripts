@@ -118,12 +118,13 @@ function generate_docs() {
   while read -r path; do
     # shellcheck disable=SC2119
     tmpfile="$(maketemp)"
+    echo "terraform-docs markdown ${path}"
     terraform-docs markdown "${path}" > "${tmpfile}"
     if ! [[ -e "${path}/README.md" ]]; then
       echo '[^]: (autogen_docs_start)' > "${path}/README.md"
-      echo '[^]: (autogen_docs_end)' >> "${path}/README.md"
+      echo '[^]: (autogen_docs_end)'  >> "${path}/README.md"
     fi
-    python helpers/combine_docfiles.py "${path}"/README.md "${tmpfile}"
+    helpers/combine_docfiles.py "${path}"/README.md "${tmpfile}"
   done < <(find_files . -name '*.tf' -print0 \
     | compat_xargs -0 -n1 dirname \
     | sort -u)
