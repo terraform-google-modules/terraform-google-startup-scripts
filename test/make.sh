@@ -32,7 +32,8 @@ maketemp() {
 find_files() {
   local pth="$1"
   shift
-  find "${pth}" -path ./.git/ -prune -o -type f "$@"
+  find "${pth}" '(' -path '*/.git' -o -path '*/.terraform' ')' \
+    -prune -o -type f "$@"
 }
 
 # Compatibility with both GNU and BSD style xargs.
