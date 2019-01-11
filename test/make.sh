@@ -116,15 +116,15 @@ function generate_docs() {
   echo "Generating markdown docs with terraform-docs"
   local path tmpfile
   while read -r path; do
-    # shellcheck disable=SC2119
-    tmpfile="$(maketemp)"
-    echo "terraform-docs markdown ${path}"
-    terraform-docs markdown "${path}" > "${tmpfile}"
-    if ! [[ -e "${path}/README.md" ]]; then
-      echo '[^]: (autogen_docs_start)' > "${path}/README.md"
-      echo '[^]: (autogen_docs_end)'  >> "${path}/README.md"
+    if [[ -e "${path}/README.md" ]]; then
+      # shellcheck disable=SC2119
+      tmpfile="$(maketemp)"
+      echo "terraform-docs markdown ${path}"
+      terraform-docs markdown "${path}" > "${tmpfile}"
+      helpers/combine_docfiles.py "${path}"/README.md "${tmpfile}"
+    else
+      echo "Skipping ${path} because README.md does not exist."
     fi
-    helpers/combine_docfiles.py "${path}"/README.md "${tmpfile}"
   done < <(find_files . -name '*.tf' -print0 \
     | compat_xargs -0 -n1 dirname \
     | sort -u)
