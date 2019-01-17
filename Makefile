@@ -25,6 +25,10 @@ BUILD_BATS_SUPPORT_VERSION ?= 004e707638eedd62e0481e8cdc9223ad471f12ee
 DOCKER_IMAGE_BATS := cftk/bats
 # DOCKER_TAG_BATS is the image semver and has no correlation to bats versions
 DOCKER_TAG_BATS ?= 0.5.0
+DOCKER_ORG := gcr.io/cloud-foundation/cicd
+PUBLISH_DOCKER_IMAGE_NAME ?= ${DOCKER_IMAGE_BATS}
+PUBLISH_DOCKER_TAG ?= ${DOCKER_TAG_BATS}
+PUBLISH_DOCKER_IMAGE := ${PUBLISH_DOCKER_IMAGE_NAME}:${PUBLISH_DOCKER_TAG}
 
 # All is the first target in the file so it will get picked up when you just run 'make' on its own
 all: check_shell check_python check_golang check_terraform check_docker check_base_files test_check_headers check_headers check_trailing_whitespace generate_docs
@@ -78,6 +82,14 @@ generate_docs:
 version:
 	@source helpers/version-repo.sh
 
+.PHONY: bats
+bats:
+	bats test/spec/*.bats
+
+.PHONY: bats_parallel
+bats:
+	time find test/spec/ -name '*.bats' -print0 | xargs -0 -P4 --no-run-if-empty -n1 bats
+
 # Build Docker
 .PHONY: docker_build_bats
 docker_build_bats:
@@ -87,28 +99,32 @@ docker_build_bats:
 		--build-arg BUILD_BATS_ASSERT_URI=${BUILD_BATS_ASSERT_URI} \
 		--build-arg BUILD_BATS_MOCK_VERSION=${BUILD_BATS_MOCK_VERSION} \
 		--build-arg BUILD_BATS_SUPPORT_VERSION=${BUILD_BATS_SUPPORT_VERSION} \
-		-t ${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} .
+		-t ${PUBLISH_DOCKER_IMAGE} .
+
+# Push Docker image
+.PHONY: docker_push_bats
+	docker push ${DOCKER_ORG}/${PUBLISH_DOCKER_IMAGE}
 
 # Run docker bats spec tests
 .PHONY: docker_bats
 docker_bats:
 	docker run --rm -it \
 		-v $(CURDIR):/cftk/workdir \
-		${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} \
-		/bin/bash -c "bats test/spec/*.bats"
+		${PUBLISH_DOCKER_IMAGE} \
+		/bin/bash -c "make bats"
 
 # Run docker bats spec tests in parallel (~30% faster)
 .PHONY: docker_bats_parallel
 docker_bats_parallel:
 	docker run --rm -it \
 		-v $(CURDIR):/cftk/workdir \
-		${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} \
-		/bin/bash -c "time find test/spec/ -name '*.bats' -print0 | xargs -0 -P4 --no-run-if-empty -n1 bats"
+		${PUBLISH_DOCKER_IMAGE} \
+		/bin/bash -c "make bats_parallel"
 
 # Run docker bats shell
 .PHONY: docker_bats_shell
 docker_bats_shell:
 	docker run --rm -it \
 		-v $(CURDIR):/cftk/workdir \
-		${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} \
+		${PUBLISH_DOCKER_IMAGE} \
 		/bin/bash

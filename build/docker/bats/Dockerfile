@@ -20,7 +20,8 @@ FROM alpine:3.8
 RUN apk add --no-cache \
   bash \
   curl \
-  git
+  git \
+  make
 
 ENV APP_BASE_DIR="/cftk"
 # Directory structure used for tools and workspace.
