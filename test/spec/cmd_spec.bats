@@ -17,7 +17,7 @@ load "test_helper/load"
 @test 'stdlib::cmd(echo foo) is successful' {
   run stdlib::cmd echo foo
   assert_success
-  assert_output 'foo'
+  assert_output 'bar'
 }
 
 @test 'stdlib::cmd(false) is unsuccessful' {
