@@ -79,6 +79,31 @@ stdlib::init() {
   stdlib::debug "stdlib::init(): startup-script-stdlib.sh initialized and ready"
 }
 
+# Install the compiled version of crcmod to get faster checksums when
+# transferring objects from GCS.  This function is intended for Enterprise Linux
+# flavor operating systems.  See:
+# https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod
+stdlib::init_gsutil_crcmod_el() {
+  if gsutil version -l | grep -qix 'compiled crcmod: True'; then
+    stdlib::debug "Skipping init_gsutil_crcmod_el() because gsutil version -l reports compiled crcmod: True"
+    return 0
+  fi
+  # Install dependencies
+  stdlib::info "gsutil -version -l reports compiled crcmod is not true"
+  stdlib::info "BEGIN: gsutil crcmod compilation and installation"
+  stdlib::cmd yum -y install gcc python-devel python-setuptools redhat-rpm-config
+  # Use the correct python version in a subshell to avoid pollution of the
+  # calling environment.
+  (
+    set +u # avoid MANPATH unbound variable issue.
+    eval "$(grep -m1 'source .*/enable' /usr/bin/gsutil)"
+    stdlib::cmd easy_install -U pip
+    stdlib::cmd pip uninstall crcmod
+    stdlib::cmd pip install -U crcmod
+  )
+  stdlib::info "END: gsutil crcmod compilation and installation"
+}
+
 # Transfer control to startup-startup-script-custom.  The script is sourced to
 # ensure all functions are exposed and the trap handlers configured here are
 # fired on exit.  A local file path or http URL are both supported.
