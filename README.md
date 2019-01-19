@@ -42,6 +42,46 @@ resource "google_compute_instance" "example" {
 }
 ```
 
+# Features
+
+## Configuration of startup-script
+
+This module provides a mechanism to automatically load configuration values for
+use by `startup-script-custom`.  Configuration values are automatically sourced
+from the metadata key `instance/attributes/startup-script-config`.  This module
+follows the `/etc/sysconfig/defaults` model of loading configuration keys and
+values.
+
+Set the startup-script-config metadata key to a rendered template:
+
+```bash
+# IPIP peer address configuration.
+PEER_OUTER_IPADDR='${peer_outer_ipaddr}'
+PEER_INNER_IPADDR='${peer_inner_ipaddr}'
+MY_INNER_IPADDR='${my_inner_ipaddr}'
+# Subnets to route through the IPIP Tunnel to the peer
+IPIP_SUBNETS='${ipip_subnets}'
+```
+
+Fill in this template in Terraform:
+
+```terraform
+data "template_file" "startup_script_config" {
+  template = "${file("${path.module}/templates/startup-script-config.tpl")}"
+  vars {
+    peer_outer_ipaddr = "${var.peer_outer_ipaddr}"
+    peer_inner_ipaddr = "${var.peer_inner_ipaddr}"
+    my_inner_ipaddr   = "${var.my_inner_ipaddr}"
+    ipip_subnets      = "${var.ipip_subnets}"
+  }
+}
+```
+
+These configuration values will be automatically loaded into the environment
+when `startup-script-custom` script executes.
+
+# Behavior
+
 ## Updating vs Deleting instances
 
 Note the use of of the `compute_instance` `metadata` attribute causes existing

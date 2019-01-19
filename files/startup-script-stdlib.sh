@@ -16,7 +16,6 @@
 # Standard library of functions useful for startup scripts.
 
 # Pending UX behaviors
-# TODO(jmccune): load_config_values to load user configuration
 # TODO(jmccune): call mandatory_argument() before E_MISSING_MANDATORY_ARG
 # TODO(jmccune): add -c <name> for alternate startup-script-custom name
 # Pending initialization functions:
@@ -195,6 +194,30 @@ stdlib::metadata_get_usage() {
   stdlib::info 'For example: stdlib::metadata_get -k instance/attributes/startup-config'
 }
 
+# Load configuration values in the spirit of /etc/sysconfig defaults, but from
+# metadata instead of the filesystem.
+stdlib::load_config_values() {
+  local config_file
+  local key="instance/attributes/startup-script-config"
+  # shellcheck disable=SC2119
+  config_file="$(stdlib::mktemp)"
+  stdlib::metadata_get -k "${key}" -o "${config_file}"
+  local status=$?
+  case "$status" in
+    0)
+      stdlib::debug "SUCCESS: Configuration data sourced from $key"
+      ;;
+    22 | 37)
+      stdlib::debug "no configuration data loaded from $key"
+      ;;
+    *)
+      stdlib::error "metadata_get -k $key returned unknown status=${status}"
+      ;;
+  esac
+  # shellcheck source=/dev/null
+  source "${config_file}"
+}
+
 # Run a command logging the entry and exit.  Intended for system level commands
 # and operational debugging.  Not intended for use with redirection.  This is
 # not named run() because bats uses a run() function.
@@ -231,8 +254,7 @@ stdlib::main() {
   stdlib::init
   stdlib::debug "Loaded startup-script-stdlib as an executable."
 
-  # TODO(jmccune): Add configuration behavior
-  # stdlib::load_config_values
+  stdlib::load_config_values
 
   stdlib::run_startup_script_custom
 }

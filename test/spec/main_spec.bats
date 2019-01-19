@@ -35,3 +35,8 @@ setup() {
   METADATA_BASE="${fixtures}/main-negative" run stdlib::main
   assert_output --regexp "Something went wrong"
 }
+
+@test 'stdlib::main() stdlib::main sources instance/attributes/startup-script-config' {
+  METADATA_BASE="${fixtures}/main-with-config" run stdlib::main
+  assert_equal "${output}" "MY_CONFIG_VAR=MY_VALUE"
+}
