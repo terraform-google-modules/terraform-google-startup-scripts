@@ -1,0 +1,5 @@
+#! /bin/bash
+
+# MY_CONFIG_VAR is defined in instance/attributes/startup-script-config and
+# should automatically be sourced by stdlib::main
+echo "MY_CONFIG_VAR=${MY_CONFIG_VAR}"
