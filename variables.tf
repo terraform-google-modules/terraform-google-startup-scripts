@@ -13,17 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-locals {
-  stdlib_head = "${file("${path.module}/files/startup-script-stdlib-head.sh")}"
-  gsutil_el   = "${var.enable_init_gsutil_crcmod_el ? file("${path.module}/files/init_gsutil_crcmod_el.sh") : ""}"
-  stdlib_body = "${file("${path.module}/files/startup-script-stdlib-body.sh")}"
-  # List representing complete content, to be concatenated together.
-  stdlib_list = [
-    "${local.stdlib_head}",
-    "${local.gsutil_el}",
-    "${local.stdlib_body}",
-  ]
-  # Final content output to the user
-  stdlib = "${join("", local.stdlib_list)}"
+variable "enable_init_gsutil_crcmod_el" {
+  description = "If not false, include stdlib::init_gsutil_crcmod_el() prior to executing startup-script-custom.  Call this function from startup-script-custom to initialize gsutil as per https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod#centos-rhel-and-fedora Intended for CentOS, RHEL and Fedora systems."
+  default     = "false"
 }
