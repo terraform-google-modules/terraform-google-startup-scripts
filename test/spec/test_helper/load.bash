@@ -117,8 +117,17 @@ fi
 
 # Use in setup(), separated out so setup() may be overridden.
 source_stdlib() {
+  local statefile
+  statefile="$(bats_mktemp)"
+  stdlib="$(bats_mktemp)"
+
+  ( cd "${BATS_TEST_DIRNAME%/}/../../" || return 1;
+    terraform init -input=false;
+    terraform apply -input=false -state-out="${statefile}";
+    terraform output -state="${statefile}" content > "${stdlib}")
   # shellcheck source=/dev/null
-  source "${BATS_TEST_DIRNAME%/}/../../files/startup-script-stdlib.sh"
+  source "${stdlib}"
+  rm -f "${stdlib}" "${statefile}"
 }
 
 # Load and initialize the function library before each test.

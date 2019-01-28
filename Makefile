@@ -24,7 +24,7 @@ BUILD_BATS_MOCK_VERSION ?= 2f9811faf43593ad7b59a0f245d8807b776e5072
 BUILD_BATS_SUPPORT_VERSION ?= 004e707638eedd62e0481e8cdc9223ad471f12ee
 DOCKER_IMAGE_BATS := cftk/bats
 # DOCKER_TAG_BATS is the image semver and has no correlation to bats versions
-DOCKER_TAG_BATS ?= 0.5.0
+DOCKER_TAG_BATS ?= 0.6.0
 
 # All is the first target in the file so it will get picked up when you just run 'make' on its own
 all: check_shell check_python check_golang check_terraform check_docker check_base_files test_check_headers check_headers check_trailing_whitespace generate_docs
@@ -103,7 +103,7 @@ docker_bats_parallel:
 	docker run --rm -it \
 		-v $(CURDIR):/cftk/workdir \
 		${DOCKER_IMAGE_BATS}:${DOCKER_TAG_BATS} \
-		/bin/bash -c "time find test/spec/ -name '*.bats' -print0 | xargs -0 -P4 --no-run-if-empty -n1 bats"
+		/bin/bash -c "terraform init && time find test/spec/ -name '*.bats' -print0 | xargs -0 -P4 --no-run-if-empty -n1 bats"
 
 # Run docker bats shell
 .PHONY: docker_bats_shell

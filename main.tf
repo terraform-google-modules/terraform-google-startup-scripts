@@ -14,3 +14,14 @@
  * limitations under the License.
  */
 
+locals {
+  stdlib_head = "${file("${path.module}/files/startup-script-stdlib-head.sh")}"
+  stdlib_body = "${file("${path.module}/files/startup-script-stdlib-body.sh")}"
+  # List representing complete content, to be concatenated together.
+  stdlib_list = [
+    "${local.stdlib_head}",
+    "${local.stdlib_body}",
+  ]
+  # Final content output to the user
+  stdlib = "${join("", local.stdlib_list)}"
+}

@@ -246,25 +246,3 @@ stdlib::mktemp() {
   TMPDIR="${DELETE_AT_EXIT:-${TMPDIR}}" mktemp "$@"
 }
 
-stdlib::main() {
-  DELETE_AT_EXIT="$(mktemp -d)"
-  readonly DELETE_AT_EXIT
-
-  # Initialize state required by other functions, e.g. debug()
-  stdlib::init
-  stdlib::debug "Loaded startup-script-stdlib as an executable."
-
-  stdlib::load_config_values
-
-  stdlib::run_startup_script_custom
-}
-
-# if script is being executed and not sourced.
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-  stdlib::finish() {
-    [[ -d "${DELETE_AT_EXIT:-}" ]] && rm -rf "${DELETE_AT_EXIT}"
-  }
-  trap stdlib::finish EXIT
-
-  stdlib::main "$@"
-fi
