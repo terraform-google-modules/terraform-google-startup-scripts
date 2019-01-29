@@ -236,3 +236,23 @@ stdlib::mktemp() {
   TMPDIR="${DELETE_AT_EXIT:-${TMPDIR}}" mktemp "$@"
 }
 
+# Return a nice error message if a mandatory argument is missing.
+stdlib::mandatory_argument() {
+  local OPTIND opt name flag
+  while getopts ":n:f:" opt; do
+    case "$opt" in
+    n) name="${OPTARG}" ;;
+    f) flag="${OPTARG}" ;;
+    :)
+      stdlib::error "Invalid argument: -${OPTARG} requires an argument to stdlib::mandatory_argument()"
+      return "${E_MISSING_MANDATORY_ARG}"
+      ;;
+    *)
+      stdlib::error "Unknown argument: -${OPTARG}"
+      stdlib::info "Usage: stdlib::mandatory_argument -n <name> -f <flag>"
+      return "${E_UNKNOWN_ARG}"
+      ;;
+    esac
+  done
+  stdlib::error "Invalid argument: -${flag} requires an argument to ${name}()."
+}
