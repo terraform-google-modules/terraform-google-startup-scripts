@@ -15,16 +15,6 @@
 
 # Standard library of functions useful for startup scripts.
 
-# Pending UX behaviors
-# TODO(jmccune): call mandatory_argument() before E_MISSING_MANDATORY_ARG
-# TODO(jmccune): add -c <name> for alternate startup-script-custom name
-# Pending initialization functions:
-# TODO(jmccune): gsutil initialization w/ crcmod
-# Pending operational functions:
-# TODO(jmccune): get_from_bucket()
-# TODO(jmccune): setup_init_script()
-# TODO(jmccune): setup_sudoers()
-
 # These are outside init_global_vars so logging functions work with the most
 # basic case of `source startup-script-stdlib.sh`
 readonly SYSLOG_DEBUG_PRIORITY="${SYSLOG_DEBUG_PRIORITY:-syslog.debug}"
