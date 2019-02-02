@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-output "project_id" {
-  description = "The project id used when managing resources."
-  value       = "${var.project_id}"
+variable "project_id" {
+  description = "The project_id to deploy the example instance into.  (e.g. \"simple-sample-project-1234\")"
 }
 
-output "region" {
-  description = "The region used when managing resources."
-  value       = "${var.region}"
-}
-
-output "nat_ip" {
-  description = "Public IP address of the example compute instance."
-  value       = "${google_compute_instance.example.network_interface.0.access_config.0.nat_ip}"
+variable "region" {
+  description = "The region to deploy to"
 }
