@@ -167,6 +167,7 @@ ok 4 E_UNKNOWN_ARG error code is 10
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
+| enable_get_from_bucket | If not false, include stdlib::get_from_bucket() prior to executing startup-script-custom.  Requires gsutil in the PATH.  See also enable_init_gsutil_crcmod_el feature flag. | string | `false` | no |
 | enable_init_gsutil_crcmod_el | If not false, include stdlib::init_gsutil_crcmod_el() prior to executing startup-script-custom.  Call this function from startup-script-custom to initialize gsutil as per https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod#centos-rhel-and-fedora Intended for CentOS, RHEL and Fedora systems. | string | `false` | no |
 
 ## Outputs
