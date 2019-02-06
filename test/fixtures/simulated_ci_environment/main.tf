@@ -20,9 +20,11 @@ provider "google" {
 }
 
 locals {
+  # roles/storage.admin used by stdlib::get_from_bucket tests.
   required_service_account_project_roles = [
     "roles/compute.instanceAdmin",
     "roles/iam.serviceAccountUser",
+    "roles/storage.admin",
   ]
   required_project_services = [
     "cloudresourcemanager.googleapis.com",
@@ -33,8 +35,8 @@ locals {
 }
 
 resource "google_project" "startup_scripts" {
-  name            = "startup-scripts"
-  project_id      = "startup-scripts"
+  name            = "${var.project_id}"
+  project_id      = "${var.project_id}"
   folder_id       = "${var.folder_id}"
   billing_account = "${var.billing_account}"
 }
