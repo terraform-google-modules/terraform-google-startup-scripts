@@ -35,7 +35,7 @@ stdlib::get_from_bucket() {
       return "${E_MISSING_MANDATORY_ARG}"
       ;;
     *)
-      stdlib::error 'Usage: stdlib::get_from_bucket -u <url> -f <file name> -h <Content hash> -d <directory>'
+      stdlib::error 'Usage: stdlib::get_from_bucket -u <url> -f <file name> -d <directory>'
       stdlib::info 'For example: stdlib::get_from_bucket -u gs://mybucket/foo.tgz -d /var/tmp'
       return "${E_UNKNOWN_ARG}"
       ;;

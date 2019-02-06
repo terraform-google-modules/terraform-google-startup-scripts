@@ -34,6 +34,7 @@ finish() {
 # use with kitchen-terraform, inspec, and gcloud.
 setup_environment() {
   local tmpfile
+  local uuid
   tmpfile="$(mktemp)"
   echo "${SERVICE_ACCOUNT_JSON}" > "${tmpfile}"
 
@@ -46,6 +47,10 @@ setup_environment() {
   # Terraform input variables
   export TF_VAR_project_id="${PROJECT_ID}"
   export TF_VAR_region="${REGION:-us-east4}"
+
+  # Unique ID used for resource names
+  uuid="$(</proc/sys/kernel/random/uuid)"
+  export UNIQUE_ID="${uuid:0:8}"
 }
 
 main() {
