@@ -19,6 +19,7 @@ FROM alpine:3.8
 # hadolint ignore=DL3018
 RUN apk add --no-cache \
   bash \
+  unzip \
   curl \
   git
 
@@ -27,6 +28,11 @@ ENV APP_BASE_DIR="/cftk"
 RUN mkdir -p "${APP_BASE_DIR}/home" \
   "${APP_BASE_DIR}/bin" \
   "${APP_BASE_DIR}/workdir"
+
+# Terraform
+WORKDIR ${APP_BASE_DIR}
+RUN curl -o terraform.zip https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
+RUN unzip terraform.zip -d "${APP_BASE_DIR}/bin"
 
 # bats
 WORKDIR ${APP_BASE_DIR}
