@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+# These outputs are fed to inspec as inputs.
 output "project_id" {
-  description = "The project id used when managing resources."
+  description = "The project id intended for use as an input to the integration test suite"
   value       = "${var.project_id}"
 }
 
 output "region" {
-  description = "The region used when managing resources."
+  description = "The region, intended for use as an input to the integration test suite"
   value       = "${var.region}"
-}
-
-output "nat_ip" {
-  description = "Public IP address of the example compute instance."
-  value       = "${google_compute_instance.example.network_interface.0.access_config.0.nat_ip}"
 }

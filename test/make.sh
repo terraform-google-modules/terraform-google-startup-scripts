@@ -130,18 +130,6 @@ function generate_docs() {
     | sort -u)
 }
 
-function prepare_test_variables() {
-  echo "Preparing terraform.tfvars files for integration tests"
-  #shellcheck disable=2044
-  for i in $(find ./test/fixtures -type f -name terraform.tfvars.sample); do
-    destination=${i/%.sample/}
-    if [ ! -f "${destination}" ]; then
-      cp "${i}" "${destination}"
-      echo "${destination} has been created. Please edit it to reflect your GCP configuration."
-    fi
-  done
-}
-
 function check_headers() {
   echo "Checking file headers"
   # Use the exclusion behavior of find_files

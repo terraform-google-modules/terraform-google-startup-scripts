@@ -13,18 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-output "project_id" {
-  description = "The project id used when managing resources."
-  value       = "${var.project_id}"
-}
-
-output "region" {
-  description = "The region used when managing resources."
-  value       = "${var.region}"
-}
-
-output "nat_ip" {
-  description = "Public IP address of the example compute instance."
-  value       = "${google_compute_instance.example.network_interface.0.access_config.0.nat_ip}"
+output "service_account_private_key" {
+  description = "The SA KEY JSON content.  Store in GOOGLE_CREDENTIALS.  This is equivalent to the `phoogle_sa` output in the infra repository"
+  value       = "${base64decode(google_service_account_key.startup_scripts.private_key)}"
 }

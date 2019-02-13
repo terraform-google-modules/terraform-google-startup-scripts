@@ -13,8 +13,13 @@
 # limitations under the License.
 
 project_id = attribute('project_id')
-region = attribute('region')
 
-control "gcloud" do
-  title "Google Cloud configuration"
+control 'simple startup-script-custom' do
+  title "With the simple example of startup-script-custom calling stdlib::info and stdlib::cmd"
+
+  describe command("gcloud compute instances list --project #{project_id}") do
+    its('exit_status') { should be 0 }
+    its('stderr') { should eq '' }
+    its('stdout') { should match(/startup-scripts-example.*RUNNING/) }
+  end
 end
