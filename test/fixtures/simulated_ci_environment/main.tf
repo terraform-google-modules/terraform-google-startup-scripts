@@ -24,6 +24,12 @@ locals {
     "roles/compute.instanceAdmin",
     "roles/iam.serviceAccountUser",
   ]
+  required_project_services = [
+    "cloudresourcemanager.googleapis.com",
+    "storage-api.googleapis.com",
+    "compute.googleapis.com",
+    "oslogin.googleapis.com",
+  ]
 }
 
 resource "google_project" "startup_scripts" {
@@ -33,14 +39,10 @@ resource "google_project" "startup_scripts" {
   billing_account = "${var.billing_account}"
 }
 
-resource "google_project_services" "startup_scripts" {
+resource "google_project_service" "startup_scripts" {
   project = "${google_project.startup_scripts.id}"
-  services = [
-    "cloudresourcemanager.googleapis.com",
-    "storage-api.googleapis.com",
-    "compute.googleapis.com",
-    "oslogin.googleapis.com",
-  ]
+  count   = "${length(local.required_project_services)}"
+  service = "${element(local.required_project_services, count.index)}"
 }
 
 resource "google_service_account" "startup_scripts" {
@@ -50,10 +52,11 @@ resource "google_service_account" "startup_scripts" {
 }
 
 resource "google_project_iam_binding" "startup_scripts" {
-  count   = "${length(local.required_service_account_project_roles)}"
-  project = "${google_project_services.startup_scripts.project}"
-  role    = "${element(local.required_service_account_project_roles, count.index)}"
-  members = [
+  depends_on = ["google_project_service.startup_scripts"]
+  count      = "${length(local.required_service_account_project_roles)}"
+  project    = "${google_project.startup_scripts.id}"
+  role       = "${element(local.required_service_account_project_roles, count.index)}"
+  members    = [
     "serviceAccount:${google_service_account.startup_scripts.email}",
   ]
 }
