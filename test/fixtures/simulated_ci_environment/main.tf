@@ -51,14 +51,12 @@ resource "google_service_account" "startup_scripts" {
   display_name = "ci-startup-scripts"
 }
 
-resource "google_project_iam_binding" "startup_scripts" {
+resource "google_project_iam_member" "startup_scripts" {
   depends_on = ["google_project_service.startup_scripts"]
   count      = "${length(local.required_service_account_project_roles)}"
   project    = "${google_project.startup_scripts.id}"
   role       = "${element(local.required_service_account_project_roles, count.index)}"
-  members    = [
-    "serviceAccount:${google_service_account.startup_scripts.email}",
-  ]
+  member     = "serviceAccount:${google_service_account.startup_scripts.email}"
 }
 
 resource "google_service_account_key" "startup_scripts" {
