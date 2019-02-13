@@ -124,27 +124,35 @@ integration_test_image:
 	docker pull ${DOCKER_IMAGE_INTEGRATION_URI}
 ## END Resources
 
+# Entry point from inside the container executing the test suite.  Modeled
+# after project factory Makefile structure and behavior.  The pipeline should
+# call this make target in a run step.
+.PHONY: test_integration
+test_integration:
+	./test/ci_integration.sh
+
 ## BEGIN Job Tasks
 # Model the CI integration-tests job definition and tasks as a make target.
 # The Git repo is placed in the same path the CI pull-request resource will be
-# placed.  Params are passed in the same way params are passed in the CI run
+# placed inside the image.  Params are passed in the same way params are passed
+# to the container inside of CI.
 #
 # Unlike other modules which use a *.tfvars file, this module uses environment
 # variables to pass inputs into the integration tests.  Pass along the same
 # variables set as parameters of the CI Job.
-.PHONY: integration_test_run
-integration_test_run: integration_test_image
+.PHONY: test_integration_docker
+test_integration_docker: integration_test_image
 	docker run --rm -it \
 		--volume $(CURDIR):/terraform-google-startup-scripts \
 		--workdir /terraform-google-startup-scripts \
 		--env SERVICE_ACCOUNT_JSON \
 		--env PROJECT_ID \
 		${DOCKER_IMAGE_INTEGRATION_URI} \
-		/bin/bash test/ci_integration.sh
+		/bin/bash -c make test_integration
 
 # Interactive Shell version of integration_test_run
-.PHONY: integration_test_shell
-integration_test_shell: integration_test_image
+.PHONY: docker_run
+docker_run: integration_test_image
 	docker run --rm -it \
 		--volume $(CURDIR):/terraform-google-startup-scripts \
 		--workdir /terraform-google-startup-scripts \
