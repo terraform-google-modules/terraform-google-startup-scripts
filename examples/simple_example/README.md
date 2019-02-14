@@ -149,8 +149,8 @@ $ curl -H Metadata-Flavor:Google http://metadata.google.internal/computeMetadata
 | Name | Description |
 |------|-------------|
 | nat_ip | Public IP address of the example compute instance. |
-| project_id |  |
-| region |  |
+| project_id | The project id used when managing resources. |
+| region | The region used when managing resources. |
 
 [^]: (autogen_docs_end)
 
