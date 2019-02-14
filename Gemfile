@@ -12,31 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
----
-driver:
-  name: "terraform"
-  command_timeout: 1800
+ruby '2.5.3'
 
-provisioner:
-  name: "terraform"
-
-platforms:
-  - name: local
-
-verifier:
-  name: terraform
-  systems:
-    - name: system
-      backend: local
-
-suites:
-  - name: "simple_example"
-    driver:
-      name: "terraform"
-      command_timeout: 1800
-      root_module_directory: test/fixtures/simple_example
-  - name: "gsutil"
-    driver:
-      name: "terraform"
-      command_timeout: 1800
-      root_module_directory: test/fixtures/gsutil
+source 'https://rubygems.org/' do
+  gem 'kitchen-terraform', '~> 4.1.0'
+end

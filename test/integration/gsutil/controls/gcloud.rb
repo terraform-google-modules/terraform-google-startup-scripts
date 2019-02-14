@@ -16,8 +16,14 @@ project_id = attribute('project_id')
 region = attribute('region')
 zone = "#{region}-a"
 
-control 'simple startup-script-custom' do
-  title "With the simple example of startup-script-custom calling stdlib::info and stdlib::cmd"
+control 'enable_init_gsutil_crcmod_el' do
+  title "With enable_init_gsutil_crcmod_el=true"
+
+  describe command("gcloud compute instances list --project #{project_id}") do
+    its('exit_status') { should be 0 }
+    its('stderr') { should eq '' }
+    its('stdout') { should match(/startup-scripts-example.*RUNNING/) }
+  end
 
   describe command("gcloud compute instances get-serial-port-output startup-scripts-example1 --project #{project_id} --zone #{zone}") do
     its('exit_status') { should be 0 }
