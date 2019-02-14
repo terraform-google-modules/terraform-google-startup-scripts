@@ -48,6 +48,6 @@ For example:
 
 | Name | Description |
 |------|-------------|
-| phoogle_sa | The SA KEY JSON content.  Store in GOOGLE_CREDENTIALS. |
+| service_account_private_key | The SA KEY JSON content.  Store in GOOGLE_CREDENTIALS.  This is equivalent to the `phoogle_sa` output in the infra repository |
 
 [^]: (autogen_docs_end)
