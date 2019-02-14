@@ -19,12 +19,6 @@ zone = "#{region}-a"
 control 'simple startup-script-custom' do
   title "With the simple example of startup-script-custom calling stdlib::info and stdlib::cmd"
 
-  describe command("gcloud compute instances list --project #{project_id}") do
-    its('exit_status') { should be 0 }
-    its('stderr') { should eq '' }
-    its('stdout') { should match(/startup-scripts-example.*RUNNING/) }
-  end
-
   describe command("gcloud compute instances get-serial-port-output startup-scripts-example1 --project #{project_id} --zone #{zone}") do
     its('exit_status') { should be 0 }
     its('stderr') { should match(%r{Specify --start=\d+ in the next get-serial-port-output invocation to get only the new output starting from here})}
