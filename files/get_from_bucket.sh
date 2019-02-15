@@ -16,8 +16,7 @@
 # Given a url and filename, download an object to the vardir. This function uses
 # gsutil to fetch from the bucket.  Note, the service account for the instance
 # must be properly configured with a role having authorization to get objects
-# from the bucket.  See Product/mktmail/commit/39fa9b8 for an example of the
-# necessary IAM role.
+# from the bucket.
 #
 # This function is intended for single file downloads and no attempt is made to
 # verify the checksum other than the default behavior of gsutil.
