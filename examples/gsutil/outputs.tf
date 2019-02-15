@@ -15,11 +15,13 @@
  */
 
 output "project_id" {
-  value = "${var.project_id}"
+  description = "The project id used when managing resources."
+  value       = "${var.project_id}"
 }
 
 output "region" {
-  value = "${var.region}"
+  description = "The region used when managing resources."
+  value       = "${var.region}"
 }
 
 output "nat_ip" {
