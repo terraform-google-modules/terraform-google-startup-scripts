@@ -19,16 +19,11 @@ zone = "#{region}-a"
 control 'enable_init_gsutil_crcmod_el' do
   title "With enable_init_gsutil_crcmod_el=true"
 
-  describe command("gcloud compute instances list --project #{project_id}") do
+  describe command("gcloud compute instances get-serial-port-output startup-scripts-gsutil1 --project #{project_id} --zone #{zone}") do
     its('exit_status') { should be 0 }
-    its('stderr') { should eq '' }
-    its('stdout') { should match(/startup-scripts-example.*RUNNING/) }
-  end
-
-  describe command("gcloud compute instances get-serial-port-output startup-scripts-example1 --project #{project_id} --zone #{zone}") do
-    its('exit_status') { should be 0 }
-    its('stderr') { should match(%r{Specify --start=\d+ in the next get-serial-port-output invocation to get only the new output starting from here})}
-    its('stdout') { should match(%r{Info \[\d+\]: Fetching http://ifconfig\.co/json}) }
+    its('stdout') { should match('TEST UUID E62A3897-AAA0-4577-A564-F00B4B54869B') }
+    its('stdout') { should match('compiled crcmod: True') }
+    its('stdout') { should match('Finished with startup-script-custom example 3FF02EC9-BFFE-4B47-BEE7-C98A07818251') }
     its('stdout') { should match('INFO startup-script: Return code 0.') }
   end
 end
