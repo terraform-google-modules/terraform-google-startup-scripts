@@ -36,8 +36,6 @@ resource "random_id" "resource_name_suffix" {
   byte_length = 4
 }
 
-#    webhook_token = "${random_id.startup_scripts_github_webhook_token.hex}"
-
 # Storage bucket used by startup-script-custom and stdlib::get_from_bucket
 resource "google_storage_bucket" "example" {
   name          = "startup-scripts-${random_id.resource_name_suffix.hex}"
