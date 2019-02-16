@@ -16,14 +16,45 @@ project_id = attribute('project_id')
 region = attribute('region')
 zone = "#{region}-a"
 
-control 'enable_init_gsutil_crcmod_el' do
-  title "With enable_init_gsutil_crcmod_el=true"
+control 'get_from_bucket with crcmod compilation' do
+  title "With enable_init_gsutil_crcmod_el=true and enable_get_from_bucket=true"
 
-  describe command("gcloud compute instances get-serial-port-output startup-scripts-gsutil1 --project #{project_id} --zone #{zone}") do
-    its('exit_status') { should be 0 }
-    its('stdout') { should match('TEST UUID E62A3897-AAA0-4577-A564-F00B4B54869B') }
-    its('stdout') { should match('compiled crcmod: True') }
-    its('stdout') { should match('Finished with startup-script-custom example 3FF02EC9-BFFE-4B47-BEE7-C98A07818251') }
-    its('stdout') { should match('INFO startup-script: Return code 0.') }
+  describe 'console output of startup-scripts-gsutil1' do
+    let :subject do
+      command("gcloud compute instances get-serial-port-output startup-scripts-gsutil1 --project #{project_id} --zone #{zone}")
+    end
+
+    describe "Overall result of startup-script-custom" do
+      its('exit_status') { should be 0 }
+      its('stdout') { should match('INFO startup-script: Return code 0.') }
+    end
+
+    describe "UUID markers from startup-script-custom in the serial output" do
+      its('stdout') { should match('TEST UUID E62A3897-AAA0-4577-A564-F00B4B54869B') }
+      its('stdout') { should match('Finished with startup-script-custom example 3FF02EC9-BFFE-4B47-BEE7-C98A07818251') }
+    end
+
+    describe "gsutil version -l before calling stdlib::init_gsutil_crcmod_el" do
+      its('stdout') { should match('679EBF864666 compiled crcmod: False') }
+    end
+
+    describe "gsutil version -l after calling stdlib::init_gsutil_crcmod_el" do
+      its('stdout') { should match('28BBEF21C095 compiled crcmod: True') }
+    end
+
+    context "when the instance does not have storage.objects.get access to the bucket" do
+      describe "stdlib::get_from_bucket should retry up to 10 times" do
+        9.times do |n|
+          its('stdout') { should match(%r{reported non-zero exit code fetching gs://startup-scripts-\w+/message\.txt.*?Retrying \(#{n+1}/10\)}) }
+        end
+      end
+    end
+
+    # context "stdlib::get_from_bucket -u gs://<bucket>/message.txt -d /path/to/tmpdir" do
+    #   describe "the content of message.txt fetched using stdlib::get_from_bucket" do
+    #     its('stdout') { should match('EXPECTED: Hello World! uuid=0afce28a-057b-42cf-a90f-493de3c0666b') }
+    #     its('stdout') { should match('ACTUAL: Hello World! uuid=0afce28a-057b-42cf-a90f-493de3c0666b') }
+    #   end
+    # end
   end
 end
