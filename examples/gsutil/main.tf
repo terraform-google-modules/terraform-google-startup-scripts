@@ -89,4 +89,9 @@ resource "google_compute_instance" "example" {
       // Ephemeral IP
     }
   }
+
+  service_account {
+    email  = "${var.service_account_email}"
+    scopes = ["storage-ro"]
+  }
 }

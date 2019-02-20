@@ -51,19 +51,22 @@ control 'get_from_bucket with crcmod compilation' do
       its('stdout') { should match('28BBEF21C095 compiled crcmod: True') }
     end
 
-    context "when the instance does not have storage.objects.get access to the bucket" do
-      describe "stdlib::get_from_bucket should retry up to 10 times" do
-        9.times do |n|
-          its('stdout') { should match(%r{reported non-zero exit code fetching gs://startup-scripts-\w+/message\.txt.*?Retrying \(#{n+1}/10\)}) }
-        end
-      end
-    end
-
-    # context "stdlib::get_from_bucket -u gs://<bucket>/message.txt -d /path/to/tmpdir" do
-    #   describe "the content of message.txt fetched using stdlib::get_from_bucket" do
-    #     its('stdout') { should match('EXPECTED: Hello World! uuid=0afce28a-057b-42cf-a90f-493de3c0666b') }
-    #     its('stdout') { should match('ACTUAL: Hello World! uuid=0afce28a-057b-42cf-a90f-493de3c0666b') }
+    ##
+    # TODO: Move this to another example with no service account bound to the
+    # instance.
+    # context "when the instance does not have storage.objects.get access to the bucket" do
+    #   describe "stdlib::get_from_bucket should retry up to 10 times" do
+    #     9.times do |n|
+    #       its('stdout') { should match(%r{reported non-zero exit code fetching gs://startup-scripts-\w+/message\.txt.*?Retrying \(#{n+1}/10\)}) }
+    #     end
     #   end
     # end
+
+    context "stdlib::get_from_bucket -u gs://<bucket>/message.txt -d /path/to/tmpdir" do
+      describe "the content of message.txt fetched using stdlib::get_from_bucket" do
+        its('stdout') { should match('EXPECTED: Hello World! uuid=0afce28a-057b-42cf-a90f-493de3c0666b') }
+        its('stdout') { should match('ACTUAL: Hello World! uuid=0afce28a-057b-42cf-a90f-493de3c0666b') }
+      end
+    end
   end
 end
