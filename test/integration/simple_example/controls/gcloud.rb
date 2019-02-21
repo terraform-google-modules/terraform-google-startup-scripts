@@ -12,14 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project_id = attribute('project_id')
+require 'retriable'
 
 control 'simple startup-script-custom' do
   title "With the simple example of startup-script-custom calling stdlib::info and stdlib::cmd"
 
-  describe command("gcloud compute instances list --project #{project_id}") do
+  describe "gcloud ... get-serial-port-output startup-scripts-example1" do
+    # Avoid racing against the instance boot sequence
+    before :all do
+      Retriable.retriable(tries: 20) do
+        get_serial_port_output = "gcloud compute instances get-serial-port-output startup-scripts-example1"
+        @cmd = command("#{get_serial_port_output} --project #{attribute('project_id')} --zone #{attribute('region')}-a")
+        if not %r{systemd: Startup finished}.match(@cmd.stdout)
+          raise StandardError, "Not found: 'systemd: Startup finished' in console output, cannot proceed"
+        end
+      end
+    end
+
+    subject do
+      @cmd
+    end
+
     its('exit_status') { should be 0 }
-    its('stderr') { should eq '' }
-    its('stdout') { should match(/startup-scripts-example.*RUNNING/) }
+    its('stdout') { should match(%r{Info \[\d+\]: Fetching http://ifconfig\.co/json}) }
+    its('stdout') { should match('INFO startup-script: Return code 0.') }
   end
 end

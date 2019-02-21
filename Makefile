@@ -147,6 +147,7 @@ test_integration_docker: integration_test_image
 		--workdir /terraform-google-startup-scripts \
 		--env SERVICE_ACCOUNT_JSON \
 		--env PROJECT_ID \
+		--env REGION \
 		${DOCKER_IMAGE_INTEGRATION_URI} \
 		/bin/bash -c make test_integration
 
@@ -158,5 +159,6 @@ docker_run: integration_test_image
 		--workdir /terraform-google-startup-scripts \
 		--env SERVICE_ACCOUNT_JSON \
 		--env PROJECT_ID \
+		--env REGION \
 		${DOCKER_IMAGE_INTEGRATION_URI} \
-		/bin/bash
+		/bin/bash -c 'source test/ci_integration.sh && setup_environment && exec /bin/bash'

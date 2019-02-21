@@ -33,9 +33,10 @@ finish() {
 # running the tests to Terraform input variables.  Also setup credentials for
 # use with kitchen-terraform, inspec, and gcloud.
 setup_environment() {
-  local tmpfile
+  local tmpfile client_email
   tmpfile="$(mktemp)"
   echo "${SERVICE_ACCOUNT_JSON}" > "${tmpfile}"
+  client_email="$(jq -r .client_email "${tmpfile}")"
 
   # Terraform and most other tools respect GOOGLE_CREDENTIALS
   export GOOGLE_CREDENTIALS="${SERVICE_ACCOUNT_JSON}"
@@ -46,6 +47,7 @@ setup_environment() {
   # Terraform input variables
   export TF_VAR_project_id="${PROJECT_ID}"
   export TF_VAR_region="${REGION:-us-east4}"
+  export TF_VAR_service_account_email="${client_email}"
 }
 
 main() {

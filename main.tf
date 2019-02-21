@@ -15,13 +15,15 @@
  */
 
 locals {
-  stdlib_head = "${file("${path.module}/files/startup-script-stdlib-head.sh")}"
-  gsutil_el   = "${var.enable_init_gsutil_crcmod_el ? file("${path.module}/files/init_gsutil_crcmod_el.sh") : ""}"
-  stdlib_body = "${file("${path.module}/files/startup-script-stdlib-body.sh")}"
+  stdlib_head     = "${file("${path.module}/files/startup-script-stdlib-head.sh")}"
+  gsutil_el       = "${var.enable_init_gsutil_crcmod_el ? file("${path.module}/files/init_gsutil_crcmod_el.sh") : ""}"
+  get_from_bucket = "${var.enable_get_from_bucket ? file("${path.module}/files/get_from_bucket.sh") : ""}"
+  stdlib_body     = "${file("${path.module}/files/startup-script-stdlib-body.sh")}"
   # List representing complete content, to be concatenated together.
   stdlib_list = [
     "${local.stdlib_head}",
     "${local.gsutil_el}",
+    "${local.get_from_bucket}",
     "${local.stdlib_body}",
   ]
   # Final content output to the user
