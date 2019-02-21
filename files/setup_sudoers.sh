@@ -1,5 +1,5 @@
 #! /bin/bash
-# Read the metadata key named "sudoers" and add each comma separated value to
+# Read the project metadata key named "sudoers" and add each comma separated value to
 # the sudoers file.
 stdlib::setup_sudoers() {
   local user user_list sudoers_file

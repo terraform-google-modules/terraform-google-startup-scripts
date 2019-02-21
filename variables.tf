@@ -25,5 +25,9 @@ variable "enable_get_from_bucket" {
 
 variable "enable_setup_init_script" {
   description = "If not false, include stdlib::setup_init_script() prior to executing startup-script-custom.   Call this function to load an init script from GCS into /etc/init.d and initialize it with chkconfig. This function depends on stdlib::get_from_bucket, so this function won't be enabled if enable_get_from_bucket is false."
+}
+
+variable "enable_setup_sudoers" {
+  description = "If true, include stdlib::setup_sudoers() prior to executing startup-script-custom. Call this function from startup-script-custom to setup unix usernames in sudoers Comma separated values must be posted to the project metadata key project/attributes/sudoers"
   default     = "false"
 }
