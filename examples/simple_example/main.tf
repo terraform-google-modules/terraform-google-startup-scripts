@@ -30,6 +30,12 @@ data "google_compute_image" "os" {
   family  = "centos-7"
 }
 
+resource "google_compute_project_metadata" "example" {
+  metadata = {
+    sudoers = "example_user"
+  }
+}
+
 resource "google_compute_instance" "example" {
   name           = "startup-scripts-example1"
   description    = "Startup Scripts Example"
