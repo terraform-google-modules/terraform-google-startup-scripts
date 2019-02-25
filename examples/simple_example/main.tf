@@ -55,6 +55,7 @@ resource "google_compute_instance" "example" {
 
   boot_disk {
     auto_delete = true
+
     initialize_params {
       image = "${data.google_compute_image.os.self_link}"
       type  = "pd-standard"
@@ -63,6 +64,7 @@ resource "google_compute_instance" "example" {
 
   network_interface {
     network = "default"
+
     access_config {
       // Ephemeral IP
     }
