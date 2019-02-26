@@ -23,6 +23,7 @@ provider "google" {
 
 module "startup-scripts" {
   source = "../../"
+  enable_setup_sudoers = true
 }
 
 data "google_compute_image" "os" {
