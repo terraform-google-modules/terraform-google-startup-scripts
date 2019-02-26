@@ -32,7 +32,7 @@ data "google_compute_image" "os" {
 
 resource "google_compute_project_metadata" "example" {
   metadata = {
-    sudoers = "example_user"
+    sudoers = "example_user1,example_user2"
   }
 }
 
