@@ -21,6 +21,7 @@
 
 # Setup an init script from a GCS Bucket. The URL to the file in the GCS bucket
 # is passed as -u, and the file name as -f
+# The URL should the full URL pointing to the file 
 stdlib::setup_init_script() {
   local OPTIND opt url fname init_script_dir
   while getopts ":u:f:" opt; do

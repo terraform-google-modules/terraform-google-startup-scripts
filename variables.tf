@@ -24,6 +24,6 @@ variable "enable_get_from_bucket" {
 }
 
 variable "enable_setup_init_script" {
-  description = "If not false, include stdlib::setup_init_script() prior to executing startup-script-custom.  ADD FUNCTION DESCRIPTION HERE"
+  description = "If not false, include stdlib::setup_init_script() prior to executing startup-script-custom.   Call this function to load an init script from GCS into /etc/init.d and initialize it with chkconfig. This function depends on stdlib::get_from_bucket, so this input will be set to false if enable_get_from_bucket is false "
   default     = "false"
 }
