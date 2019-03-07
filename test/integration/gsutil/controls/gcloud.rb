@@ -69,12 +69,12 @@ control 'get_from_bucket with crcmod compilation' do
       end
     end
     
-    context "stdlib::setup_init_script -n <init_script_name> -k <metadata_key>" do
+    context "stdlib::setup_init_script -u gs://<bucket>/<file_name> -f <file_name>" do
       describe "the confirmation or error message of a new init script fetched fm a metadata key using stdlib::setup_init_script" do
          its('stdout') { should match('ACTUAL: Service enabled status is 1') }
          its('stdout') { should match('EXPECTED: Service enabled status is 1') }
       end
     end
-    
+
   end
 end

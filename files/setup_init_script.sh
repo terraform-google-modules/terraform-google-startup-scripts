@@ -17,11 +17,11 @@
 # stdlib::get_from_bucket which itself uses gsutil to fetch from the bucket.  
 #
 # This function is intended for single file downloads
+# To be properly installed, your init script should support chkconfig. 
+# See example init script in <path-to-module>/examples/gsutil/init_scripts/init_script for reference
 
-
-# Setup an init script from a GCS Bucket. The URL to the file in the GCS bucket
-# is passed as -u, and the file name as -f
-# The URL should the full URL pointing to the file 
+# Setup an init script from a GCS Bucket. The URL pointing to the init script file in the GCS bucket
+# is passed as -u, and the file name as -f.
 stdlib::setup_init_script() {
   local OPTIND opt url fname init_script_dir
   while getopts ":u:f:" opt; do
@@ -39,14 +39,8 @@ stdlib::setup_init_script() {
     esac
   done
 
-  # Trivially compute the filename from the URL if unspecified.
-  if [[ -z "${fname}" ]]; then
-    fname=${url##*/}
-    stdlib::debug "Computed init_script filename='${fname}' given URL."
-  fi
-
   init_script_dir="$(mktemp -d)"
-  stdlib::get_from_bucket -u "${url}" -d "${init_script_dir}"
+  stdlib::get_from_bucket -u "${url}" -f ${fname} -d "${init_script_dir}"
   stdlib::info 'Called stdlib::get_from_bucket' 
   stdlib::cmd install -o 0 -g 0 -m 0755 "${init_script_dir}/${fname}" "/etc/init.d/${fname}"
   stdlib::info 'Installed init script' 
