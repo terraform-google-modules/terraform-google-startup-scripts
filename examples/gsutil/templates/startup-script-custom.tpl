@@ -22,3 +22,10 @@ echo -n 'ACTUAL: '
 cat "$${tmpdir}/${object}"
 
 echo "Finished with startup-script-custom example 3FF02EC9-BFFE-4B47-BEE7-C98A07818251"
+
+
+echo "Downloading init scripts from GCS"
+stdlib::setup_init_script -u "gs://${bucket}/${init_script_object}" -f "${init_script_object}"
+echo 'Init script named ${init_script_object} loaded from GCS bucket installed in /etc/init.d and enabled with chkconfig command'
+echo 'EXPECTED: Service enabled status is 1'
+echo -n "ACTUAL: Service enabled status is " ; chkconfig --list ${init_script_object} 2>/dev/null | grep ${init_script_object} -w -c
