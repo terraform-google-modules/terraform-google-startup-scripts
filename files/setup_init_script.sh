@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Given a url and filename, download an init script /etc/init.d and setup the init script. This function uses
+# Given a url and filename, download an init script into /etc/init.d and setup the init script. This function uses
 # stdlib::get_from_bucket which itself uses gsutil to fetch from the bucket.  
 #
 # This function is intended for single file downloads
