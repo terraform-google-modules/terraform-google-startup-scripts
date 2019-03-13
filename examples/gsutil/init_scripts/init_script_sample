@@ -20,7 +20,7 @@ stop)
         stop
         ;;
 *)
-        echo $"Usage: $0 {start|stop}"
+        echo "Usage: $0 {start|stop}"
         RETVAL=2
 esac
 
