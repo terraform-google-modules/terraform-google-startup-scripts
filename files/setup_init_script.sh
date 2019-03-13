@@ -41,7 +41,6 @@ stdlib::setup_init_script() {
 
   init_script_dir="$(mktemp -d)"
   stdlib::get_from_bucket -u "${url}" -f "${fname}" -d "${init_script_dir}"
-  stdlib::info 'Called stdlib::get_from_bucket'
   stdlib::cmd install -o 0 -g 0 -m 0755 "${init_script_dir}/${fname}" "/etc/init.d/${fname}"
   stdlib::info 'Installed init script'
   stdlib::cmd chkconfig --level 2345 "${fname}" on

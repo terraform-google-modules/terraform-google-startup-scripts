@@ -19,11 +19,11 @@ variable "enable_init_gsutil_crcmod_el" {
 }
 
 variable "enable_get_from_bucket" {
-  description = "If not false, include stdlib::setup_init_script() prior to executing startup-script-custom.  Requires gsutil in the PATH.  See also enable_init_gsutil_crcmod_el feature flag."
+  description = "If not false, include stdlib::get_from_bucket() prior to executing startup-script-custom.  Requires gsutil in the PATH.  See also enable_init_gsutil_crcmod_el feature flag."
   default     = "false"
 }
 
 variable "enable_setup_init_script" {
-  description = "If not false, include stdlib::setup_init_script() prior to executing startup-script-custom.   Call this function to load an init script from GCS into /etc/init.d and initialize it with chkconfig. This function depends on stdlib::get_from_bucket, so this input will be set to false if enable_get_from_bucket is false "
+  description = "If not false, include stdlib::setup_init_script() prior to executing startup-script-custom.   Call this function to load an init script from GCS into /etc/init.d and initialize it with chkconfig. This function depends on stdlib::get_from_bucket, so this function won't be enabled if enable_get_from_bucket is false."
   default     = "false"
 }
