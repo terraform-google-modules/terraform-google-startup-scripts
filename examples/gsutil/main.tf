@@ -60,9 +60,9 @@ data "template_file" "startup-script-custom" {
   template = "${file("${path.module}/templates/startup-script-custom.tpl")}"
 
   vars = {
-    bucket  = "${google_storage_bucket_object.message.bucket}"
-    object  = "${google_storage_bucket_object.message.name}"
-    content = "${google_storage_bucket_object.message.content}"
+    bucket             = "${google_storage_bucket_object.message.bucket}"
+    object             = "${google_storage_bucket_object.message.name}"
+    content            = "${google_storage_bucket_object.message.content}"
     init_script_object = "${google_storage_bucket_object.init_script_sample.name}"
   }
 }
@@ -86,6 +86,7 @@ resource "google_compute_instance" "example" {
 
   boot_disk {
     auto_delete = true
+
     initialize_params {
       image = "${data.google_compute_image.os.self_link}"
       type  = "pd-standard"
@@ -94,6 +95,7 @@ resource "google_compute_instance" "example" {
 
   network_interface {
     network = "default"
+
     access_config {
       // Ephemeral IP
     }
