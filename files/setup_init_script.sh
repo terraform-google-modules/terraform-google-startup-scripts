@@ -14,10 +14,10 @@
 # limitations under the License.
 
 # Given a url and filename, download an init script into /etc/init.d and setup the init script. This function uses
-# stdlib::get_from_bucket which itself uses gsutil to fetch from the bucket.  
+# stdlib::get_from_bucket which itself uses gsutil to fetch from the bucket.
 #
 # This function is intended for single file downloads
-# To be properly installed, your init script should support chkconfig. 
+# To be properly installed, your init script should support chkconfig.
 # See example init script in <path-to-module>/examples/gsutil/init_scripts/init_script for reference
 
 # Setup an init script from a GCS Bucket. The URL pointing to the init script file in the GCS bucket
@@ -41,9 +41,9 @@ stdlib::setup_init_script() {
 
   init_script_dir="$(mktemp -d)"
   stdlib::get_from_bucket -u "${url}" -f "${fname}" -d "${init_script_dir}"
-  stdlib::info 'Called stdlib::get_from_bucket' 
+  stdlib::info 'Called stdlib::get_from_bucket'
   stdlib::cmd install -o 0 -g 0 -m 0755 "${init_script_dir}/${fname}" "/etc/init.d/${fname}"
-  stdlib::info 'Installed init script' 
+  stdlib::info 'Installed init script'
   stdlib::cmd chkconfig --level 2345 "${fname}" on
   stdlib::info 'Setup run levels for init script'
 }

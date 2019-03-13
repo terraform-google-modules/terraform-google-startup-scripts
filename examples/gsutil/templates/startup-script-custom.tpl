@@ -28,9 +28,9 @@ echo "Downloading init scripts from GCS"
 stdlib::setup_init_script -u "gs://${bucket}/${init_script_object}" -f "${init_script_object}"
 echo 'Init script named ${init_script_object} loaded from GCS bucket installed in /etc/init.d and enabled with chkconfig command'
 
-# Check if the service was properly installed using chkconfig 
+# Check if the service was properly installed using chkconfig
 echo 'EXPECTED: Service enabled status is 1'
-# Listing all enabled services and isolating the new service output. 
-# If there is a service with the exact same name as $init_script_object, 
+# Listing all enabled services and isolating the new service output.
+# If there is a service with the exact same name as $init_script_object,
 # the command "grep $init_script_object -w -c" will return 1
 echo -n "ACTUAL: Service enabled status is " ; chkconfig --list ${init_script_object} 2>/dev/null | grep ${init_script_object} -w -c

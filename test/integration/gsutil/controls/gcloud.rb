@@ -68,7 +68,7 @@ control 'get_from_bucket with crcmod compilation' do
         its('stdout') { should match('ACTUAL: Hello World! uuid=0afce28a-057b-42cf-a90f-493de3c0666b') }
       end
     end
-    
+
     context "stdlib::setup_init_script -u gs://<bucket>/<file_name> -f <file_name>" do
       describe "the confirmation or error message of a new init script fetched fm a metadata key using stdlib::setup_init_script" do
          its('stdout') { should match('ACTUAL: Service enabled status is 1') }
