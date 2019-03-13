@@ -1,4 +1,3 @@
-# vi /path/to/init_script_sample.sh
 #!/bin/bash
 #
 # chkconfig: 345 10 90
