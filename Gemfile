@@ -16,4 +16,5 @@ ruby '2.5.3'
 
 source 'https://rubygems.org/' do
   gem 'kitchen-terraform', '~> 4.1.0'
+  gem 'retriable', '~> 3.1.2'
 end
