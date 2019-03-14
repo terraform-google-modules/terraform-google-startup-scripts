@@ -12,6 +12,7 @@ functions:
 
  1. `stdlib::init_gsutil_crcmod_el`
  2. `stdlib::get_from_bucket`
+ 3. `stdlib::setup_init_script`
 
 [^]: (autogen_docs_start)
 

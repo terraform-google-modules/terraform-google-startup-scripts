@@ -25,6 +25,7 @@ module "startup-scripts" {
   source                       = "../../"
   enable_init_gsutil_crcmod_el = true
   enable_get_from_bucket       = true
+  enable_setup_init_script     = true
 }
 
 data "google_compute_image" "os" {
@@ -49,12 +50,20 @@ resource "google_storage_bucket_object" "message" {
   bucket  = "${google_storage_bucket.example.name}"
 }
 
+resource "google_storage_bucket_object" "init_script_sample" {
+  name    = "init_script_sample"
+  content = "${file("${path.module}/init_scripts/init_script_sample")}"
+  bucket  = "${google_storage_bucket.example.name}"
+}
+
 data "template_file" "startup-script-custom" {
   template = "${file("${path.module}/templates/startup-script-custom.tpl")}"
+
   vars = {
-    bucket  = "${google_storage_bucket_object.message.bucket}"
-    object  = "${google_storage_bucket_object.message.name}"
-    content = "${google_storage_bucket_object.message.content}"
+    bucket             = "${google_storage_bucket_object.message.bucket}"
+    object             = "${google_storage_bucket_object.message.name}"
+    content            = "${google_storage_bucket_object.message.content}"
+    init_script_object = "${google_storage_bucket_object.init_script_sample.name}"
   }
 }
 
@@ -77,6 +86,7 @@ resource "google_compute_instance" "example" {
 
   boot_disk {
     auto_delete = true
+
     initialize_params {
       image = "${data.google_compute_image.os.self_link}"
       type  = "pd-standard"
@@ -85,6 +95,7 @@ resource "google_compute_instance" "example" {
 
   network_interface {
     network = "default"
+
     access_config {
       // Ephemeral IP
     }

@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# chkconfig: 345 10 90
+# description: Sample script that support chkconfig
+
+start() {
+         touch /var/tmp/init_script_sample
+         date > /var/tmp/init_script_sample
+}
+
+stop() {
+        rm -f /var/tmp/init_script_sample
+}
+
+case "$1" in
+start)
+        start
+        ;;
+stop)
+        stop
+        ;;
+*)
+        echo "Usage: $0 {start|stop}"
+        RETVAL=2
+esac
+
+exit $RETVAL
