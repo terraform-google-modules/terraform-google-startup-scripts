@@ -23,11 +23,18 @@ provider "google" {
 
 module "startup-scripts" {
   source = "../../"
+  enable_setup_sudoers = true
 }
 
 data "google_compute_image" "os" {
   project = "centos-cloud"
   family  = "centos-7"
+}
+
+resource "google_compute_project_metadata" "example" {
+  metadata = {
+    sudoers = "example_user1,example_user2"
+  }
 }
 
 resource "google_compute_instance" "example" {
@@ -49,6 +56,7 @@ resource "google_compute_instance" "example" {
 
   boot_disk {
     auto_delete = true
+
     initialize_params {
       image = "${data.google_compute_image.os.self_link}"
       type  = "pd-standard"
@@ -57,6 +65,7 @@ resource "google_compute_instance" "example" {
 
   network_interface {
     network = "default"
+
     access_config {
       // Ephemeral IP
     }

@@ -1,5 +1,16 @@
 #! /bin/bash
+
+# add example_user for test
+sudo useradd -m example_user1
+
+# add another user for inverse test - \
+# sudo should not work for this user
+sudo useradd -m example_user2
+sudo sh -c 'echo testpassword2019 | passwd --stdin example_user2'
+
+stdlib::info "Checking whether to add any users to sudoers ..."
+stdlib::setup_sudoers
+
 URL=${URL:-"http://ifconfig.co/json"}
 stdlib::info "Fetching ${URL}"
 stdlib::cmd curl --silent "${URL}"
-echo
