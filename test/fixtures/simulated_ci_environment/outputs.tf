@@ -15,5 +15,5 @@
  */
 output "service_account_private_key" {
   description = "The SA KEY JSON content.  Store in GOOGLE_CREDENTIALS.  This is equivalent to the `phoogle_sa` output in the infra repository"
-  value       = "${base64decode(google_service_account_key.startup_scripts.private_key)}"
+  value       = base64decode(google_service_account_key.startup_scripts.private_key)
 }

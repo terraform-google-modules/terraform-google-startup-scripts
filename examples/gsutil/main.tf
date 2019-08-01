@@ -15,9 +15,9 @@
  */
 
 provider "google" {
-  version = "~> 1.20"
-  project = "${var.project_id}"
-  region  = "${var.region}"
+  version = "~> 2.9.0"
+  project = var.project_id
+  region  = var.region
   zone    = "${var.region}-a"
 }
 
@@ -40,30 +40,30 @@ resource "random_id" "resource_name_suffix" {
 # Storage bucket used by startup-script-custom and stdlib::get_from_bucket
 resource "google_storage_bucket" "example" {
   name          = "startup-scripts-${random_id.resource_name_suffix.hex}"
-  location      = "${var.region}"
+  location      = var.region
   storage_class = "REGIONAL"
 }
 
 resource "google_storage_bucket_object" "message" {
   name    = "message.txt"
-  content = "${var.message}"
-  bucket  = "${google_storage_bucket.example.name}"
+  content = var.message
+  bucket  = google_storage_bucket.example.name
 }
 
 resource "google_storage_bucket_object" "init_script_sample" {
   name    = "init_script_sample"
-  content = "${file("${path.module}/init_scripts/init_script_sample")}"
-  bucket  = "${google_storage_bucket.example.name}"
+  content = file("${path.module}/init_scripts/init_script_sample")
+  bucket  = google_storage_bucket.example.name
 }
 
 data "template_file" "startup-script-custom" {
-  template = "${file("${path.module}/templates/startup-script-custom.tpl")}"
+  template = file("${path.module}/templates/startup-script-custom.tpl")
 
   vars = {
-    bucket             = "${google_storage_bucket_object.message.bucket}"
-    object             = "${google_storage_bucket_object.message.name}"
-    content            = "${google_storage_bucket_object.message.content}"
-    init_script_object = "${google_storage_bucket_object.init_script_sample.name}"
+    bucket             = google_storage_bucket_object.message.bucket
+    object             = google_storage_bucket_object.message.name
+    content            = google_storage_bucket_object.message.content
+    init_script_object = google_storage_bucket_object.init_script_sample.name
   }
 }
 
@@ -73,9 +73,9 @@ resource "google_compute_instance" "example" {
   machine_type   = "f1-micro"
   can_ip_forward = false
 
-  metadata {
-    startup-script        = "${module.startup-scripts.content}"
-    startup-script-custom = "${data.template_file.startup-script-custom.rendered}"
+  metadata = {
+    startup-script        = module.startup-scripts.content
+    startup-script-custom = data.template_file.startup-script-custom.rendered
   }
 
   scheduling {
@@ -88,7 +88,7 @@ resource "google_compute_instance" "example" {
     auto_delete = true
 
     initialize_params {
-      image = "${data.google_compute_image.os.self_link}"
+      image = data.google_compute_image.os.self_link
       type  = "pd-standard"
     }
   }
@@ -102,7 +102,8 @@ resource "google_compute_instance" "example" {
   }
 
   service_account {
-    email  = "${var.service_account_email}"
+    email  = var.service_account_email
     scopes = ["storage-ro"]
   }
 }
+

@@ -13,17 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-variable "project_id" {
-  description = "The project_id to deploy the example instance into.  (e.g. \"simple-sample-project-1234\")"
+terraform {
+  required_version = ">= 0.12"
 }
-
-variable "region" {
-  description = "The region to deploy to"
-}
-
-variable "url" {
-  description = "The url to fetch in the startup script.  This URL is passed via instance metadata to the startup script.  (e.g. ifconfig.co/city)"
-  default     = "http://ifconfig.co/json"
-}
-

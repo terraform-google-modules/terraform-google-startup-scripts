@@ -16,10 +16,10 @@
 # These outputs are fed to inspec as inputs.
 output "project_id" {
   description = "The project id intended for use as an input to the integration test suite"
-  value       = "${var.project_id}"
+  value       = var.project_id
 }
 
 output "region" {
   description = "The region, intended for use as an input to the integration test suite"
-  value       = "${var.region}"
+  value       = var.region
 }
