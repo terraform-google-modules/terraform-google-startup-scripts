@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2019-08-05
+
+- Supported version of Terraform is 0.12. [#26]
+
 ## [0.1.0] - 2019-04-02
 
 ### Added
@@ -13,3 +17,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Unreleased]: https://github.com/terraform-google-modules/terraform-google-startup-scripts/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/terraform-google-modules/terraform-google-startup-scripts/releases/tag/v0.1.0
+[26]: https://github.com/terraform-google-modules/terraform-google-startup-scripts/pull/26

@@ -24,7 +24,7 @@
 DELETE_AT_EXIT="$(mktemp -d)"
 finish() {
   echo 'BEGIN: finish() trap handler' >&2
-  bundle exec kitchen destroy
+  kitchen destroy
   [[ -d "${DELETE_AT_EXIT}" ]] && rm -rf "${DELETE_AT_EXIT}"
   echo 'END: finish() trap handler' >&2
 }
@@ -59,9 +59,9 @@ main() {
   setup_environment
   set -x
   # Execute the test lifecycle
-  bundle exec kitchen create
-  bundle exec kitchen converge
-  bundle exec kitchen verify
+  kitchen create
+  kitchen converge
+  kitchen verify
 }
 
 # if script is being executed and not sourced.

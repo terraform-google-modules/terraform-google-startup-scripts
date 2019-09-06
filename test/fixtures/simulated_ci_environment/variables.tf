@@ -16,23 +16,25 @@
 
 variable "project_id" {
   description = "The project_id to deploy the example instance into.  (e.g. \"simple-sample-project-1234\")"
+  type        = string
 }
 
 variable "region" {
   description = "The region to deploy to"
+  type        = string
 }
 
 variable "organization_id" {
   description = "The numeric organization id"
-  type        = "string"
+  type        = string
 }
 
 variable "folder_id" {
   description = "The numeric folder id to create resources"
-  type        = "string"
+  type        = string
 }
 
 variable "billing_account" {
   description = "The billing account id associated with the project, e.g. XXXXXX-YYYYYY-ZZZZZZ"
-  type        = "string"
+  type        = string
 }

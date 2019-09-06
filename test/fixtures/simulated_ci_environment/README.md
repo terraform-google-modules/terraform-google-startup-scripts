@@ -33,21 +33,20 @@ For example:
 
 [^]: (autogen_docs_start)
 
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| billing_account | The billing account id associated with the project, e.g. XXXXXX-YYYYYY-ZZZZZZ | string | - | yes |
-| folder_id | The numeric folder id to create resources | string | - | yes |
-| organization_id | The numeric organization id | string | - | yes |
-| project_id | The project_id to deploy the example instance into.  (e.g. "simple-sample-project-1234") | string | - | yes |
-| region | The region to deploy to | string | - | yes |
+| billing\_account | The billing account id associated with the project, e.g. XXXXXX-YYYYYY-ZZZZZZ | string | n/a | yes |
+| folder\_id | The numeric folder id to create resources | string | n/a | yes |
+| organization\_id | The numeric organization id | string | n/a | yes |
+| project\_id | The project_id to deploy the example instance into.  (e.g. "simple-sample-project-1234") | string | n/a | yes |
+| region | The region to deploy to | string | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| service_account_private_key | The SA KEY JSON content.  Store in GOOGLE_CREDENTIALS.  This is equivalent to the `phoogle_sa` output in the infra repository |
+| service\_account\_private\_key | The SA KEY JSON content.  Store in GOOGLE_CREDENTIALS.  This is equivalent to the `phoogle_sa` output in the infra repository |
 
 [^]: (autogen_docs_end)

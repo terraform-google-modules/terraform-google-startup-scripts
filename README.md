@@ -11,6 +11,11 @@ Use cases are:
  * Functions to execute commands and provide a consistent output format for the
    end user and/or machine parsing via logs.
 
+## Compatibility
+
+This module is meant for use with Terraform 0.12. If you haven't [upgraded](https://www.terraform.io/upgrade-guides/0-12.html) and need a Terraform 0.11.x-compatible version of this module, the last released version intended for Terraform 0.11.x
+is [0.1.0](https://registry.terraform.io/modules/terraform-google-modules/startup-scripts/google/0.1.0).
+
 # Usage
 
 The library is loaded as the startup script of an instance.  It initializes and
@@ -160,16 +165,15 @@ ok 3 E_MISSING_MANDATORY_ARG error code is 9
 ok 4 E_UNKNOWN_ARG error code is 10
 ```
 
-[^]: (autogen_docs_start)
-
-
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| enable_get_from_bucket | If not false, include stdlib::get_from_bucket() prior to executing startup-script-custom.  Requires gsutil in the PATH.  See also enable_init_gsutil_crcmod_el feature flag. | string | `false` | no |
-| enable_init_gsutil_crcmod_el | If not false, include stdlib::init_gsutil_crcmod_el() prior to executing startup-script-custom.  Call this function from startup-script-custom to initialize gsutil as per https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod#centos-rhel-and-fedora Intended for CentOS, RHEL and Fedora systems. | string | `false` | no |
-| enable_setup_init_script | If true, include stdlib::setup_init_script() prior to executing startup-script-custom.  Call this function to load an init script from GCS into /etc/init.d and initialize it with chkconfig. This function depends on stdlib::get_from_bucket, so this input will be set to false if enable_get_from_bucket is false | string | `false` | no |
+| enable\_get\_from\_bucket | If not false, include stdlib::get_from_bucket() prior to executing startup-script-custom.  Requires gsutil in the PATH.  See also enable_init_gsutil_crcmod_el feature flag. | bool | `"false"` | no |
+| enable\_init\_gsutil\_crcmod\_el | If not false, include stdlib::init_gsutil_crcmod_el() prior to executing startup-script-custom.  Call this function from startup-script-custom to initialize gsutil as per https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod#centos-rhel-and-fedora Intended for CentOS, RHEL and Fedora systems. | bool | `"false"` | no |
+| enable\_setup\_init\_script | If not false, include stdlib::setup_init_script() prior to executing startup-script-custom.   Call this function to load an init script from GCS into /etc/init.d and initialize it with chkconfig. This function depends on stdlib::get_from_bucket, so this function won't be enabled if enable_get_from_bucket is false. | bool | `"false"` | no |
+| enable\_setup\_sudoers | If true, include stdlib::setup_sudoers() prior to executing startup-script-custom. Call this function from startup-script-custom to setup unix usernames in sudoers Comma separated values must be posted to the project metadata key project/attributes/sudoers | bool | `"false"` | no |
 
 ## Outputs
 
@@ -177,7 +181,7 @@ ok 4 E_UNKNOWN_ARG error code is 10
 |------|-------------|
 | content | startup-script-stdlib.sh content as a string value. |
 
-[^]: (autogen_docs_end)
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 [metadata_startup_script]: https://www.terraform.io/docs/providers/google/r/compute_instance.html#metadata_startup_script
 [bats]: https://github.com/sstephenson/bats

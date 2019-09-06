@@ -16,6 +16,11 @@
 SHELL := /usr/bin/env bash
 
 # Docker build config variables
+CREDENTIALS_PATH ?= /cft/workdir/credentials.json
+DOCKER_ORG := gcr.io/cloud-foundation-cicd
+DOCKER_TAG_BASE_KITCHEN_TERRAFORM ?= 2.3.0
+DOCKER_REPO_BASE_KITCHEN_TERRAFORM := ${DOCKER_ORG}/cft/kitchen-terraform:${DOCKER_TAG_BASE_KITCHEN_TERRAFORM}
+
 # Use commit ID's because BATS upstream does not tag releases correctly.
 BUILD_BATS_VERSION ?= 03608115df2071fff4eaaff1605768c275e5f81f
 BUILD_BATS_ASSERT_VERSION ?= 8200039faf9790c05d9865490c97a0e101b9c80f
@@ -25,18 +30,10 @@ BUILD_BATS_SUPPORT_VERSION ?= 004e707638eedd62e0481e8cdc9223ad471f12ee
 DOCKER_IMAGE_BATS := cftk/bats
 # DOCKER_TAG_BATS is the image semver and has no correlation to bats versions
 DOCKER_TAG_BATS ?= 0.6.0
-# Integration Testing Versions
-DOCKER_IMAGE_INTEGRATION := cft/kitchen-terraform
-# These versions should match the same versions used in the Pipeline definition
-BUILD_TERRAFORM_VERSION ?= 0.11.10
-BUILD_CLOUD_SDK_VERSION ?= 216.0.0
-BUILD_PROVIDER_GOOGLE_VERSION ?= 1.19.1
-BUILD_PROVIDER_GSUITE_VERSION ?= 0.1.10
-DOCKER_IMAGE_INTEGRATION_TAG ?= ${BUILD_TERRAFORM_VERSION}_${BUILD_CLOUD_SDK_VERSION}_${BUILD_PROVIDER_GOOGLE_VERSION}_${BUILD_PROVIDER_GSUITE_VERSION}
-DOCKER_IMAGE_INTEGRATION_URI ?= gcr.io/cloud-foundation-cicd/${DOCKER_IMAGE_INTEGRATION}:${DOCKER_IMAGE_INTEGRATION_TAG}
+
 
 # All is the first target in the file so it will get picked up when you just run 'make' on its own
-all: check_shell check_python check_golang check_terraform check_docker check_base_files test_check_headers check_headers check_trailing_whitespace generate_docs
+all: check_terraform check_shell check_python check_golang check_docker check_base_files test_check_headers check_headers check_trailing_whitespace generate_docs
 
 # The .PHONY directive tells make that this isn't a real target and so
 # the presence of a file named 'check_shell' won't cause this target to stop
@@ -153,12 +150,15 @@ test_integration_docker: integration_test_image
 
 # Interactive Shell version of integration_test_run
 .PHONY: docker_run
-docker_run: integration_test_image
+docker_run:
 	docker run --rm -it \
-		--volume $(CURDIR):/terraform-google-startup-scripts \
-		--workdir /terraform-google-startup-scripts \
-		--env SERVICE_ACCOUNT_JSON \
-		--env PROJECT_ID \
-		--env REGION \
-		${DOCKER_IMAGE_INTEGRATION_URI} \
-		/bin/bash -c 'source test/ci_integration.sh && setup_environment && exec /bin/bash'
+		-e COMPUTE_ENGINE_SERVICE_ACCOUNT \
+		-e PROJECT_ID \
+		-e REGION \
+		-e ZONES \
+		-e SERVICE_ACCOUNT_JSON \
+		-e CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=${CREDENTIALS_PATH} \
+		-e GOOGLE_APPLICATION_CREDENTIALS=${CREDENTIALS_PATH} \
+		-v "$(CURDIR)":/cft/workdir \
+		${DOCKER_REPO_BASE_KITCHEN_TERRAFORM} \
+		/bin/bash -c "source test/ci_integration.sh && setup_environment && exec /bin/bash"

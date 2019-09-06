@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ruby '2.5.3'
+ruby '2.6.3'
 
 source 'https://rubygems.org/' do
-  gem 'kitchen-terraform', '~> 4.1.0'
-  gem 'retriable', '~> 3.1.2'
+  gem 'kitchen-terraform', '~> 4.9'
+  gem 'retriable', '~> 4.0'
 end

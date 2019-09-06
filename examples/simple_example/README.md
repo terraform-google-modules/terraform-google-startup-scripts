@@ -133,25 +133,23 @@ $ curl -H Metadata-Flavor:Google http://metadata.google.internal/computeMetadata
 100  7268  100  7268    0     0   958k      0 --:--:-- --:--:-- --:--:-- 1013k
 ```
 
-[^]: (autogen_docs_start)
-
-
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| project_id | The project_id to deploy the example instance into.  (e.g. "simple-sample-project-1234") | string | - | yes |
-| region | The region to deploy to | string | - | yes |
-| url | The url to fetch in the startup script.  This URL is passed via instance metadata to the startup script.  (e.g. ifconfig.co/city) | string | `http://ifconfig.co/json` | no |
+| project\_id | The project_id to deploy the example instance into.  (e.g. "simple-sample-project-1234") | string | n/a | yes |
+| region | The region to deploy to | string | n/a | yes |
+| url | The url to fetch in the startup script.  This URL is passed via instance metadata to the startup script.  (e.g. ifconfig.co/city) | string | `"http://ifconfig.co/json"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| nat_ip | Public IP address of the example compute instance. |
-| project_id | The project id used when managing resources. |
+| nat\_ip | Public IP address of the example compute instance. |
+| project\_id | The project id used when managing resources. |
 | region | The region used when managing resources. |
 
-[^]: (autogen_docs_end)
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 [simple-project]: https://github.com/terraform-google-modules/terraform-google-project-factory/tree/master/examples/simple_project
