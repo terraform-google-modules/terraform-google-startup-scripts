@@ -15,14 +15,14 @@
  */
 
 provider "google" {
-  version = "~> 1.20"
-  project = "${var.project_id}"
-  region  = "${var.region}"
+  version = "~> 2.9.0"
+  project = var.project_id
+  region  = var.region
   zone    = "${var.region}-a"
 }
 
 module "startup-scripts" {
-  source = "../../"
+  source               = "../../"
   enable_setup_sudoers = true
 }
 
@@ -43,9 +43,9 @@ resource "google_compute_instance" "example" {
   machine_type   = "f1-micro"
   can_ip_forward = false
 
-  metadata {
-    startup-script        = "${module.startup-scripts.content}"
-    startup-script-custom = "${file("${path.module}/files/startup-script-custom")}"
+  metadata = {
+    startup-script        = module.startup-scripts.content
+    startup-script-custom = file("${path.module}/files/startup-script-custom")
   }
 
   scheduling {
@@ -58,7 +58,7 @@ resource "google_compute_instance" "example" {
     auto_delete = true
 
     initialize_params {
-      image = "${data.google_compute_image.os.self_link}"
+      image = data.google_compute_image.os.self_link
       type  = "pd-standard"
     }
   }
@@ -71,3 +71,4 @@ resource "google_compute_instance" "example" {
     }
   }
 }
+

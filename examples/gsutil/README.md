@@ -14,23 +14,22 @@ functions:
  2. `stdlib::get_from_bucket`
  3. `stdlib::setup_init_script`
 
-[^]: (autogen_docs_start)
-
-
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| project_id | The project_id to deploy the example instance into.  (e.g. "simple-sample-project-1234") | string | - | yes |
-| region | The region to deploy to | string | - | yes |
-| url | The url to fetch in the startup script.  This URL is passed via instance metadata to the startup script.  (e.g. ifconfig.co/city) | string | `http://ifconfig.co/json` | no |
+| message | The content to place in a bucket object message.txt. startup-script-custom fetches this object and validate this message against the content as an end-to-end example of stdlib::get_from_bucket(). | string | `"Hello World! uuid=0afce28a-057b-42cf-a90f-493de3c0666b"` | no |
+| project\_id | The project_id to deploy the example instance into.  (e.g. "simple-sample-project-1234") | string | n/a | yes |
+| region | The region to deploy to | string | n/a | yes |
+| service\_account\_email | The service acocunt email to associate with the example instance.  Should have storage.buckets.get to use stdlib::get_from_bucket | string | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| nat_ip | Public IP address of the example compute instance. |
-| project_id |  |
-| region |  |
+| nat\_ip | Public IP address of the example compute instance. |
+| project\_id | The project id used when managing resources. |
+| region | The region used when managing resources. |
 
-[^]: (autogen_docs_end)
+<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

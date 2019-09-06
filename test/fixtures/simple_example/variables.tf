@@ -16,8 +16,10 @@
 
 variable "project_id" {
   description = "The project_id to deploy the example instance into.  (e.g. \"simple-sample-project-1234\")"
+  type        = string
 }
 
 variable "region" {
   description = "The region to deploy to"
+  type        = string
 }

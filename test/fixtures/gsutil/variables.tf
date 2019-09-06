@@ -16,12 +16,15 @@
 
 variable "project_id" {
   description = "The project_id to deploy the example instance into.  (e.g. \"simple-sample-project-1234\")"
+  type        = string
 }
 
 variable "region" {
   description = "The region to deploy to"
+  type        = string
 }
 
 variable "service_account_email" {
   description = "The service acocunt email to associate with the example instance.  Should have storage.buckets.get to use stdlib::get_from_bucket"
+  type        = string
 }

@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Please note that this file was generated from [terraform-google-module-template](https://github.com/terraform-google-modules/terraform-google-module-template).
+# Please make sure to contribute relevant changes upstream!
+
 # Create a temporary directory that's auto-cleaned, even if the process aborts.
 DELETE_AT_EXIT="$(mktemp -d)"
 finish() {
@@ -32,13 +35,17 @@ maketemp() {
 find_files() {
   local pth="$1"
   shift
-  find "${pth}" '(' -path '*/.git' -o -path '*/.terraform' ')' \
+  find "${pth}" '(' \
+    -path '*/.git' \
+    -o -path '*/.terraform' \
+    -o -path '*/.kitchen' \
+    ')' \
     -prune -o -type f "$@"
 }
 
 # Compatibility with both GNU and BSD style xargs.
 compat_xargs() {
-  local compat=()
+  local compat=() rval
   # Test if xargs is GNU or BSD style.  GNU xargs will succeed with status 0
   # when given --no-run-if-empty and no input on STDIN.  BSD xargs will fail and
   # exit status non-zero If xargs fails, assume it is BSD style and proceed.
@@ -47,6 +54,11 @@ compat_xargs() {
     compat=("--no-run-if-empty")
   fi
   xargs "${compat[@]}" "$@"
+    rval="$?"
+  if [[ -z "${NOWARN:-}" ]] && [[ "${rval}" -gt 0 ]]; then
+    echo "Warning: compat_xargs $* failed with exit code ${rval}" >&2
+  fi
+  return "${rval}"
 }
 
 # This function makes sure that the required files for
@@ -67,14 +79,28 @@ function docker() {
     | compat_xargs -0 hadolint
 }
 
-# This function runs 'terraform validate' against all
-# directory paths which contain *.tf files.
+# This function runs 'terraform validate' and 'terraform fmt'
+# against all directory paths which contain *.tf files.
 function check_terraform() {
-  echo "Running terraform validate"
+  local rval=125
+  # fmt is before validate for faster feedback, validate requires terraform
+  # init which takes time.
+  echo "Running terraform fmt"
   find_files . -name "*.tf" -print0 \
     | compat_xargs -0 -n1 dirname \
     | sort -u \
-    | compat_xargs -n1 terraform validate --check-variables=false
+    | compat_xargs -t -n1 terraform fmt -diff -check=true -write=false
+  rval="$?"
+  if [[ "${rval}" -gt 0 ]]; then
+    echo "Error: terraform fmt failed with exit code ${rval}" >&2
+    echo "Check the output for diffs and correct using terraform fmt <dir>" >&2
+    return "${rval}"
+  fi
+  echo "Running terraform validate"
+  find_files . -not -path "./test/fixtures/shared/*" -name "*.tf" -print0 \
+    | compat_xargs -0 -n1 dirname \
+    | sort -u \
+    | compat_xargs -t -n1 helpers/terraform_validate
 }
 
 # This function runs 'go fmt' and 'go vet' on every file
@@ -104,8 +130,11 @@ function check_shell() {
 # in any files in the project.
 # There are some exclusions
 function check_trailing_whitespace() {
-  echo "The following lines have trailing whitespace"
-  grep -r '[[:blank:]]$' --exclude-dir=".terraform" --exclude-dir=".kitchen" --exclude="*.png" --exclude="*.pyc" --exclude-dir=".git" .
+  local rc
+  echo "Checking for trailing whitespace"
+  find_files . -print \
+    | grep -v -E '\.(pyc|png)$' \
+    | NOWARN=1 compat_xargs grep -H -n '[[:blank:]]$'
   rc=$?
   if [[ ${rc} -eq 0 ]]; then
     return 1
@@ -114,16 +143,18 @@ function check_trailing_whitespace() {
 
 function generate_docs() {
   echo "Generating markdown docs with terraform-docs"
-  local path tmpfile
-  while read -r path; do
-    if [[ -e "${path}/README.md" ]]; then
-      # shellcheck disable=SC2119
-      tmpfile="$(maketemp)"
-      echo "terraform-docs markdown ${path}"
-      terraform-docs markdown "${path}" > "${tmpfile}"
-      helpers/combine_docfiles.py "${path}"/README.md "${tmpfile}"
+  local pth helper_dir rval
+  helper_dir="$(pwd)/helpers"
+  while read -r pth; do
+    if [[ -e "${pth}/README.md" ]]; then
+      (cd "${pth}" || return 3; "${helper_dir}"/terraform_docs .;)
+      rval="$?"
+      if [[ "${rval}" -gt 0 ]]; then
+        echo "Error: terraform_docs in ${pth} exit code: ${rval}" >&2
+        return "${rval}"
+      fi
     else
-      echo "Skipping ${path} because README.md does not exist."
+      echo "Skipping ${pth} because README.md does not exist."
     fi
   done < <(find_files . -name '*.tf' -print0 \
     | compat_xargs -0 -n1 dirname \

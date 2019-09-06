@@ -31,7 +31,7 @@ RUN mkdir -p "${APP_BASE_DIR}/home" \
 
 # Terraform
 WORKDIR ${APP_BASE_DIR}
-RUN curl -o terraform.zip https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip
+RUN curl -o terraform.zip https://releases.hashicorp.com/terraform/0.12.4/terraform_0.12.4_linux_amd64.zip
 RUN unzip terraform.zip -d "${APP_BASE_DIR}/bin"
 
 # bats
