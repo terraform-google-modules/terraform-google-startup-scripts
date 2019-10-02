@@ -15,9 +15,9 @@
  */
 # These outputs are fed to inspec as inputs.
 output "project_id" {
-  value = "${var.project_id}"
+  value = var.project_id
 }
 
 output "region" {
-  value = "${var.region}"
+  value = var.region
 }

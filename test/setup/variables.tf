@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-variable "project_id" {
-  description = "The project_id to deploy the example instance into.  (e.g. \"simple-sample-project-1234\")"
-  type        = string
-}
-
-variable "region" {
-  description = "The region to deploy to"
-  type        = string
-}
-
-variable "organization_id" {
+variable "org_id" {
   description = "The numeric organization id"
-  type        = string
 }
 
 variable "folder_id" {
-  description = "The numeric folder id to create resources"
-  type        = string
+  description = "The folder to deploy in"
 }
 
 variable "billing_account" {
   description = "The billing account id associated with the project, e.g. XXXXXX-YYYYYY-ZZZZZZ"
-  type        = string
 }

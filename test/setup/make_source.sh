@@ -1,4 +1,5 @@
-#! /bin/bash
+#!/usr/bin/env bash
+
 # Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,12 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Entry point for spec tests.  This script is run within the context of a
-# https://github.com/karlkfi/concourse-dcind Docker image.
+echo "#!/usr/bin/env bash" > ../source.sh
 
-set -x
-set -e
-set -u
-apk add --update make
-make docker_build_bats
-exec make docker_bats
+project_id=$(terraform output project_id)
+echo "export TF_VAR_project_id='$project_id'" >> ../source.sh
+
+region="us-central1"
+echo "export TF_VAR_region='$region'" >> ../source.sh
+
+service_account_email=$(terraform output service_account_email)
+echo "export TF_VAR_service_account_email='$service_account_email'" >> ../source.sh
+
+sa_json=$(terraform output sa_key)
+# shellcheck disable=SC2086
+echo "export SERVICE_ACCOUNT_JSON='$(echo $sa_json | base64 --decode)'" >> ../source.sh

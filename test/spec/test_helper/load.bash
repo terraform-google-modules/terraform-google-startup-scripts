@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load "${BATS_PREFIX}/../bats-support/load.bash"
-load "${BATS_PREFIX}/../bats-assert/load.bash"
-load "${BATS_PREFIX}/../bats-mock/stub.bash"
+load "/usr/local/bats-support/load.bash"
+load "/usr/local/bats-assert/load.bash"
+load "/usr/local/bats-mock/stub.bash"
 
 bats_delete_at_exit="$(mktemp -d)"
 bats_finish() {
