@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-output "service_account_private_key" {
-  description = "The SA KEY JSON content.  Store in GOOGLE_CREDENTIALS.  This is equivalent to the `phoogle_sa` output in the infra repository"
-  value       = base64decode(google_service_account_key.startup_scripts.private_key)
+
+module "project" {
+  source  = "terraform-google-modules/project-factory/google"
+  version = "~> 3.0"
+
+  name                = "ci-startup-scripts"
+  random_project_id   = "true"
+  org_id              = var.org_id
+  folder_id           = var.folder_id
+  billing_account     = var.billing_account
+  auto_create_network = true
+
+  activate_apis = [
+    "cloudresourcemanager.googleapis.com",
+    "storage-api.googleapis.com",
+    "compute.googleapis.com",
+    "oslogin.googleapis.com",
+  ]
 }
+

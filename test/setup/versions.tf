@@ -1,5 +1,5 @@
 /**
- * Copyright 2018 Google LLC
+ * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-module "example" {
-  source                = "../../../examples/gsutil"
-  project_id            = var.project_id
-  region                = var.region
-  service_account_email = var.service_account_email
+terraform {
+  required_version = ">= 0.12"
+}
+
+provider "google" {
+  version = "~> 2.13.0"
+}
+
+provider "google-beta" {
+  version = "~> 2.13.0"
 }

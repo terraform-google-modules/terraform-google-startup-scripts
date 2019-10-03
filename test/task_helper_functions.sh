@@ -1,5 +1,6 @@
-#! /bin/bash
-# Copyright 2018 Google LLC
+#!/usr/bin/env bash
+
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Entry point for spec tests.  This script is run within the context of a
-# https://github.com/karlkfi/concourse-dcind Docker image.
-
-set -x
-set -e
-set -u
-apk add --update make
-make docker_build_bats
-exec make docker_bats
+function test_bats() {
+  time find test/spec/ -name '*.bats -print0' | xargs -0 -P4 --no-run-if-empty -n1 bats
+}

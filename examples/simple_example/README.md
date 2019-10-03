@@ -138,6 +138,7 @@ $ curl -H Metadata-Flavor:Google http://metadata.google.internal/computeMetadata
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
+| network | The network name to deploy to | string | `"default"` | no |
 | project\_id | The project_id to deploy the example instance into.  (e.g. "simple-sample-project-1234") | string | n/a | yes |
 | region | The region to deploy to | string | n/a | yes |
 | url | The url to fetch in the startup script.  This URL is passed via instance metadata to the startup script.  (e.g. ifconfig.co/city) | string | `"http://ifconfig.co/json"` | no |

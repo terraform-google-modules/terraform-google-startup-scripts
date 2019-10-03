@@ -20,6 +20,7 @@ functions:
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | message | The content to place in a bucket object message.txt. startup-script-custom fetches this object and validate this message against the content as an end-to-end example of stdlib::get_from_bucket(). | string | `"Hello World! uuid=0afce28a-057b-42cf-a90f-493de3c0666b"` | no |
+| network | The network name to deploy to | string | `"default"` | no |
 | project\_id | The project_id to deploy the example instance into.  (e.g. "simple-sample-project-1234") | string | n/a | yes |
 | region | The region to deploy to | string | n/a | yes |
 | service\_account\_email | The service acocunt email to associate with the example instance.  Should have storage.buckets.get to use stdlib::get_from_bucket | string | n/a | yes |

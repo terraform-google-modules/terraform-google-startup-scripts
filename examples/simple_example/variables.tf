@@ -22,8 +22,12 @@ variable "region" {
   description = "The region to deploy to"
 }
 
+variable "network" {
+  description = "The network name to deploy to"
+  default     = "default"
+}
+
 variable "url" {
   description = "The url to fetch in the startup script.  This URL is passed via instance metadata to the startup script.  (e.g. ifconfig.co/city)"
   default     = "http://ifconfig.co/json"
 }
-

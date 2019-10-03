@@ -94,7 +94,7 @@ resource "google_compute_instance" "example" {
   }
 
   network_interface {
-    network = "default"
+    network = var.network
 
     access_config {
       // Ephemeral IP

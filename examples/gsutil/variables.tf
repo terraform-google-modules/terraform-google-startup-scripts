@@ -22,6 +22,11 @@ variable "region" {
   description = "The region to deploy to"
 }
 
+variable "network" {
+  description = "The network name to deploy to"
+  default     = "default"
+}
+
 variable "service_account_email" {
   description = "The service acocunt email to associate with the example instance.  Should have storage.buckets.get to use stdlib::get_from_bucket"
 }
