@@ -78,7 +78,7 @@ docker_test_bats:
 	docker run --rm -it \
 		-v $(CURDIR):/workspace \
 		$(REGISTRY_URL)/${DOCKER_IMAGE_DEVELOPER_TOOLS}:${DOCKER_TAG_VERSION_DEVELOPER_TOOLS} \
-		/bin/bash -c 'time find test/spec/ -name *.bats -print0 | xargs -0 -P4 --no-run-if-empty -n1 bats'
+		/bin/bash -c 'source /usr/local/bin/task_helper_functions.sh && test_bats'
 
 # Generate documentation
 .PHONY: docker_generate_docs

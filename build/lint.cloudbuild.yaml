@@ -18,7 +18,7 @@ steps:
   args: ['/usr/local/bin/test_lint.sh']
 - name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
   id: 'bats'
-  args: ['/bin/bash', '-c', 'time find test/spec/ -name *.bats -print0 | xargs -0 -P4 --no-run-if-empty -n1 bats']
+  args: ['/bin/bash', '-c', 'source /usr/local/bin/task_helper_functions.sh && test_bats']
 tags:
 - 'ci'
 - 'lint'
