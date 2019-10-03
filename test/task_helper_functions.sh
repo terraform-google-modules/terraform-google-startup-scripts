@@ -15,5 +15,5 @@
 # limitations under the License.
 
 function test_bats() {
-  time find test/spec/ -name *.bats -print0 | xargs -0 -P4 --no-run-if-empty -n1 bats
+  time find test/spec/ -name '*.bats -print0' | xargs -0 -P4 --no-run-if-empty -n1 bats
 }
