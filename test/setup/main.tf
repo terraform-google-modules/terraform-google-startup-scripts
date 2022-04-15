@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
+resource "random_id" "random_project_id_suffix" {
+  byte_length = 2
+}
+
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 3.0"
+  version = "~> 13.0"
 
-  name                = "ci-startup-scripts"
-  random_project_id   = "true"
-  org_id              = var.org_id
-  folder_id           = var.folder_id
-  billing_account     = var.billing_account
+  name              = "ci-startup-scripts-${random_id.random_project_id_suffix.hex}"
+  random_project_id = true
+  org_id            = var.org_id
+  folder_id         = var.folder_id
+  billing_account   = var.billing_account
+
   auto_create_network = true
 
   activate_apis = [

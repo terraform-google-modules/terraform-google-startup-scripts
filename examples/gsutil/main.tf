@@ -21,10 +21,9 @@ provider "google" {
 }
 
 module "startup-scripts" {
-  source                       = "../../"
-  enable_init_gsutil_crcmod_el = true
-  enable_get_from_bucket       = true
-  enable_setup_init_script     = true
+  source                   = "../../"
+  enable_get_from_bucket   = true
+  enable_setup_init_script = true
 }
 
 data "google_compute_image" "os" {

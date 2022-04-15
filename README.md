@@ -13,8 +13,12 @@ Use cases are:
 
 ## Compatibility
 
-This module is meant for use with Terraform 0.12. If you haven't [upgraded](https://www.terraform.io/upgrade-guides/0-12.html) and need a Terraform 0.11.x-compatible version of this module, the last released version intended for Terraform 0.11.x
-is [0.1.0](https://registry.terraform.io/modules/terraform-google-modules/startup-scripts/google/0.1.0).
+This module is meant for use with Terraform 0.13+ and tested using Terraform 1.0+.
+If you find incompatibilities using Terraform `>=0.13`, please open an issue.
+
+If you haven't [upgraded][terraform-0.13-upgrade] and need a Terraform
+0.12.x-compatible version of this module, the last released version
+intended for Terraform 0.12.x is [1.0.0].
 
 # Usage
 
@@ -132,11 +136,11 @@ non-zero length value.  Logs are sent to syslog and standard error by default.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| enable\_get\_from\_bucket | If not false, include stdlib::get_from_bucket() prior to executing startup-script-custom.  Requires gsutil in the PATH.  See also enable_init_gsutil_crcmod_el feature flag. | bool | `"false"` | no |
-| enable\_init\_gsutil\_crcmod\_el | If not false, include stdlib::init_gsutil_crcmod_el() prior to executing startup-script-custom.  Call this function from startup-script-custom to initialize gsutil as per https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod#centos-rhel-and-fedora Intended for CentOS, RHEL and Fedora systems. | bool | `"false"` | no |
-| enable\_setup\_init\_script | If not false, include stdlib::setup_init_script() prior to executing startup-script-custom.   Call this function to load an init script from GCS into /etc/init.d and initialize it with chkconfig. This function depends on stdlib::get_from_bucket, so this function won't be enabled if enable_get_from_bucket is false. | bool | `"false"` | no |
-| enable\_setup\_sudoers | If true, include stdlib::setup_sudoers() prior to executing startup-script-custom. Call this function from startup-script-custom to setup unix usernames in sudoers Comma separated values must be posted to the project metadata key project/attributes/sudoers | bool | `"false"` | no |
+|------|-------------|------|---------|:--------:|
+| enable\_get\_from\_bucket | If not false, include stdlib::get\_from\_bucket() prior to executing startup-script-custom.  Requires gsutil in the PATH.  See also enable\_init\_gsutil\_crcmod\_el feature flag. | `bool` | `false` | no |
+| enable\_init\_gsutil\_crcmod\_el | If not false, include stdlib::init\_gsutil\_crcmod\_el() prior to executing startup-script-custom.  Call this function from startup-script-custom to initialize gsutil as per https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod#centos-rhel-and-fedora Intended for CentOS, RHEL and Fedora systems. | `bool` | `false` | no |
+| enable\_setup\_init\_script | If not false, include stdlib::setup\_init\_script() prior to executing startup-script-custom.   Call this function to load an init script from GCS into /etc/init.d and initialize it with chkconfig. This function depends on stdlib::get\_from\_bucket, so this function won't be enabled if enable\_get\_from\_bucket is false. | `bool` | `false` | no |
+| enable\_setup\_sudoers | If true, include stdlib::setup\_sudoers() prior to executing startup-script-custom. Call this function from startup-script-custom to setup unix usernames in sudoers Comma separated values must be posted to the project metadata key project/attributes/sudoers | `bool` | `false` | no |
 
 ## Outputs
 

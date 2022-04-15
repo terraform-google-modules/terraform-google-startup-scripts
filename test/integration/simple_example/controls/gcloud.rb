@@ -35,6 +35,6 @@ control 'simple startup-script-custom' do
 
     its('exit_status') { should be 0 }
     its('stdout') { should match(%r{Info \[\d+\]: Fetching http://ifconfig\.co/json}) }
-    its('stdout') { should match('INFO startup-script: Return code 0.') }
+    its('stdout') { should match('startup-script exit status 0') }
   end
 end

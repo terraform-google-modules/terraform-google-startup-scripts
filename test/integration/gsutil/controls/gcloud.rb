@@ -14,8 +14,8 @@
 
 require 'retriable'
 
-control 'get_from_bucket with crcmod compilation' do
-  title "With enable_init_gsutil_crcmod_el=true and enable_get_from_bucket=true"
+control 'get_from_bucket' do
+  title "With enable_get_from_bucket=true"
 
   describe 'console output of startup-scripts-gsutil1' do
     # Avoid racing against the instance boot sequence
@@ -35,20 +35,12 @@ control 'get_from_bucket with crcmod compilation' do
 
     describe "Overall result of startup-script-custom" do
       its('exit_status') { should be 0 }
-      its('stdout') { should match('INFO startup-script: Return code 0.') }
+      its('stdout') { should match('startup-script exit status 0') }
     end
 
     describe "UUID markers from startup-script-custom in the serial output" do
       its('stdout') { should match('TEST UUID E62A3897-AAA0-4577-A564-F00B4B54869B') }
       its('stdout') { should match('Finished with startup-script-custom example 3FF02EC9-BFFE-4B47-BEE7-C98A07818251') }
-    end
-
-    describe "gsutil version -l before calling stdlib::init_gsutil_crcmod_el" do
-      its('stdout', focus: true) { should match('679EBF864666 compiled crcmod: False') }
-    end
-
-    describe "gsutil version -l after calling stdlib::init_gsutil_crcmod_el" do
-      its('stdout') { should match('28BBEF21C095 compiled crcmod: True') }
     end
 
     ##
