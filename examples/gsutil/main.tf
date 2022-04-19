@@ -15,17 +15,15 @@
  */
 
 provider "google" {
-  version = "~> 2.9.0"
   project = var.project_id
   region  = var.region
   zone    = "${var.region}-a"
 }
 
 module "startup-scripts" {
-  source                       = "../../"
-  enable_init_gsutil_crcmod_el = true
-  enable_get_from_bucket       = true
-  enable_setup_init_script     = true
+  source                   = "../../"
+  enable_get_from_bucket   = true
+  enable_setup_init_script = true
 }
 
 data "google_compute_image" "os" {

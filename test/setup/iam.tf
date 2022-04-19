@@ -25,7 +25,7 @@ locals {
 
 resource "google_service_account" "int_test" {
   project      = module.project.project_id
-  account_id   = "ci-account"
+  account_id   = "ci-account-${random_id.random_project_id_suffix.hex}"
   display_name = "ci-account"
 }
 
