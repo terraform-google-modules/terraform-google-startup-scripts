@@ -44,7 +44,7 @@ so:
 ```terraform
 resource "google_compute_instance" "example" {
   # other attributes removed
-  metadata {
+  metadata = {
     startup-script        = "${module.startup-script-lib.content}"
     startup-script-custom = "stdlib::info Hello World"
   }
@@ -77,7 +77,7 @@ Fill in this template in Terraform:
 ```terraform
 data "template_file" "startup_script_config" {
   template = "${file("${path.module}/templates/startup-script-config.tpl")}"
-  vars {
+  vars = {
     peer_outer_ipaddr = "${var.peer_outer_ipaddr}"
     peer_inner_ipaddr = "${var.peer_inner_ipaddr}"
     my_inner_ipaddr   = "${var.my_inner_ipaddr}"
