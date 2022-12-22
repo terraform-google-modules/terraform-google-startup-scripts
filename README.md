@@ -105,14 +105,14 @@ It can be helpful to re-run custom startup scripts by logging into the instance
 and running.
 
 ```bash
-sudo google_metadata_script_runner --script-type startup
+sudo google_metadata_script_runner startup
 ```
 
 To enable full debugging, both in the script runner and the startup script
 library, set `DEBUG` to a non-zero length string.
 
 ```bash
-sudo DEBUG=1 google_metadata_script_runner --script-type startup --debug
+sudo DEBUG=1 google_metadata_script_runner startup --debug
 ```
 
 ## Configuration
