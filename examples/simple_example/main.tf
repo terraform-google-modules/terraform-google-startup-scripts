@@ -21,7 +21,9 @@ provider "google" {
 }
 
 module "startup-scripts" {
-  source               = "../../"
+  source  = "terraform-google-modules/startup-scripts/google"
+  version = "~> 2.0"
+
   enable_setup_sudoers = true
 }
 
