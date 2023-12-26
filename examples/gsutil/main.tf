@@ -21,7 +21,9 @@ provider "google" {
 }
 
 module "startup-scripts" {
-  source                   = "../../"
+  source  = "terraform-google-modules/startup-scripts/google"
+  version = "~> 2.0"
+
   enable_get_from_bucket   = true
   enable_setup_init_script = true
 }
