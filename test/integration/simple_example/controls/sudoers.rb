@@ -36,6 +36,6 @@ control 'simple startup-script-custom' do
     its('exit_status') { should be 0 }
     its('stdout') { should match(%r{Info \[\d+\]: Adding example_user1 to /etc/sudoers}) }
     its('stdout') { should match(%r{Info \[\d+\]: sudoers config valid!}) }
-    its('stdout') { should match('INFO startup-script: Return code 0.') }
+    its('stdout') { should match('startup-script exit status 0') }
   end
 end
