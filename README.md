@@ -137,7 +137,7 @@ non-zero length value.  Logs are sent to syslog and standard error by default.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| enable\_get\_from\_bucket | If not false, include stdlib::get\_from\_bucket() prior to executing startup-script-custom.  Requires gsutil in the PATH.  See also enable\_init\_gsutil\_crcmod\_el feature flag. | `bool` | `false` | no |
+| enable\_get\_from\_bucket | If not false, include stdlib::get\_from\_bucket() prior to executing startup-script-custom.  Requires gcloud in the PATH.  See also enable\_init\_gsutil\_crcmod\_el feature flag. | `bool` | `false` | no |
 | enable\_init\_gsutil\_crcmod\_el | If not false, include stdlib::init\_gsutil\_crcmod\_el() prior to executing startup-script-custom.  Call this function from startup-script-custom to initialize gsutil as per https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod#centos-rhel-and-fedora Intended for CentOS, RHEL and Fedora systems. | `bool` | `false` | no |
 | enable\_setup\_init\_script | If not false, include stdlib::setup\_init\_script() prior to executing startup-script-custom.   Call this function to load an init script from GCS into /etc/init.d and initialize it with chkconfig. This function depends on stdlib::get\_from\_bucket, so this function won't be enabled if enable\_get\_from\_bucket is false. | `bool` | `false` | no |
 | enable\_setup\_sudoers | If true, include stdlib::setup\_sudoers() prior to executing startup-script-custom. Call this function from startup-script-custom to setup unix usernames in sudoers Comma separated values must be posted to the project metadata key project/attributes/sudoers | `bool` | `false` | no |

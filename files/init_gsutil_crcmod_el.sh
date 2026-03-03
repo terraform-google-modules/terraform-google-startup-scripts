@@ -18,6 +18,7 @@
 # flavor operating systems.  See:
 # https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod
 stdlib::init_gsutil_crcmod_el() {
+  # The 'gsutil version -l' command checks for compiled crcmod. This functionality is specific to gsutil and has no direct equivalent in gcloud storage. The command is not migrated.
   if gsutil version -l | grep -qix 'compiled crcmod: True'; then
     stdlib::debug "Skipping init_gsutil_crcmod_el() because gsutil version -l reports compiled crcmod: True"
     return 0
