@@ -10,7 +10,7 @@
 stdlib::init_gsutil_crcmod_el
 # Expect compiled crcmod: True
 # The -l flag for "gsutil version" is not supported in gcloud storage.
-# echo "28BBEF21C095 $(gsutil version -l | grep '^compiled crcmod:')"
+echo "28BBEF21C095 $(gsutil version -l | grep '^compiled crcmod:')"
 
 # Check for crcmod
 # https://cloud.google.com/storage/docs/gsutil/addlhelp/CRC32CandInstallingcrcmod
