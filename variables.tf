@@ -36,4 +36,3 @@ variable "enable_setup_sudoers" {
   type        = bool
   default     = false
 }
-
