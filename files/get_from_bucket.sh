@@ -14,14 +14,14 @@
 # limitations under the License.
 
 # Given a url and filename, download an object to the vardir. This function uses
-# gsutil to fetch from the bucket.  Note, the service account for the instance
+# gcloud storage to fetch from the bucket.  Note, the service account for the instance
 # must be properly configured with a role having authorization to get objects
 # from the bucket.
 #
 # This function is intended for single file downloads and no attempt is made to
-# verify the checksum other than the default behavior of gsutil.
+# verify the checksum other than the default behavior of gcloud storage.
 #
-# This function should have no other platform dependencies other than gsutil.
+# This function should have no other platform dependencies other than gcloud storage.
 stdlib::get_from_bucket() {
   local OPTIND opt url fname dir="${VARDIR:-/var/lib/startup}"
   while getopts ":u:f:d:" opt; do
@@ -49,10 +49,10 @@ stdlib::get_from_bucket() {
   local attempt=1
   local max_attempts=10
   while [[ $attempt -lt $max_attempts ]]; do
-    if stdlib::cmd gsutil -q cp "${url}" "${dir}/${fname}"; then
+    if stdlib::cmd gcloud -q storage cp "${url}" "${dir}/${fname}"; then
       break
     else
-      stdlib::error "gsutil reported non-zero exit code fetching ${url}.  Retrying (${attempt}/${max_attempts})"
+      stdlib::error "gcloud storage reported non-zero exit code fetching ${url}.  Retrying (${attempt}/${max_attempts})"
       ((attempt++))
     fi
   done
